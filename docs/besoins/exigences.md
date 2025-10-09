@@ -6,25 +6,25 @@ title: Analyse des besoins - Exigences
 
 ## Exigences fonctionnelles
 
-TODO: Liste des fonctions que le système doit accomplir.
-
-Exemple :
-
-- [ ] EF1 : L’utilisateur peut créer un compte.
-- [ ] EF2 : Le système envoie un courriel de confirmation.
+- [ ] Rechercher des cours  
+- [ ] Consulter les détails d'un cours  
+- [ ] Comparer plusieurs cours  
+- [ ] Personnaliser son profil étudiant  
+- [ ] Consulter les avis agrégrés  
+- [ ] Mettre une commentaire  
 
 ## Exigences non fonctionnelles
 
-TODO: Contraintes de performance, sécurité, compatibilité, etc.
-
-Exemple :
-
-- [ ] ENF1 : Le système doit répondre en moins de 2 secondes.
-- [ ] ENF2 : L'application doit être compatible avec Chrome et Firefox.
+- [ ] Planifium : L'API doit toujours répondre aux requêtes  
+- [ ] Disponibilité : Le système doit être disponible à 99.999%  
+- [ ] Temps de réponse : délais de réponse inferieur ou égale à 1.2 secondes pour toutes les requêtes  
+- [ ] Maintenabilité : Code facile à maintenir et à faire évoluer  
+- [ ] Evolutif : Le système doit être capable de gérer l'augmentation du nombre d'utilisateurs  
+- [ ] Le platforme doit être compatible avec Chrome, brave, firefox, internet explorateur et ceux des android et iOS  
 
 ## Priorisation
-
-TODO: Identifier les exigences critiques.
+ 
+- Chiffrement des données sensibles  
 
 ## Types d'utilisateurs
 
@@ -32,19 +32,20 @@ TODO: Identifier les exigences critiques.
 
 | Type d’utilisateur | Description | Exemples de fonctionnalités accessibles |
 |--------------------|-------------|------------------------------------------|
-| Utilisateur invité | Accès limité, pas d’authentification | Consultation des ressources |
-| Utilisateur authentifié | Compte personnel, fonctions principales | Réservation, historique |
-| Administrateur | Droits étendus, gestion des ressources | Création/suppression de ressources, gestion des utilisateurs |
+| Étudiant | Utilisateur principal qui consulte et utilise la plateforme | Consulter la liste des cours, comparer la charge de travail, voir les statistiques de réussite |
+| API  | Fournit les données officielles des cours | Renvoie des données en fonction des requêtes demander  |
+| Discord | Collecte les avis étudiants via bot | Renvoie des données collecter |
+| Technicien | Maintient et améliore la plateforme | En cas de panne résoudre en moins de 24h, faire le suivie des infrastructure|  
 
-<!-- TODO: Détailler selon le périmètre du projet. -->
 
 ## Infrastructures
 
 > Informations sur l’environnement d’exécution cible, les outils ou plateformes nécessaires.
 
-- Le système sera hébergé sur un serveur Ubuntu 22.04.
-- Base de données : PostgreSQL version 15.
-- Serveur Web : Nginx + Gunicorn (pour une app Python, par exemple).
-- Framework principal : [À spécifier selon le projet].
-
-<!-- TODO: Compléter selon le stack technique prévu. -->
+- Le système sera hébergé sur un serveur Ubuntu 22.04.  
+- Base de données : PostgreSQL version 15.  
+- Serveur Web : Nginx + Gunicorn (pour une app Python, par exemple).  
+- Langage principal : Python, JavaScript  
+- Framework principal : React et Flash  
+- Outils de développement: Git, Docker, VSCode, nano  
+- Tests : Pytest, Postman, Selenium   
