@@ -1,40 +1,46 @@
----
-title: Vue d'ensemble
----
+# Plateforme de Choix de Cours - UdeM
 
-<style>
-    @media screen and (min-width: 76em) {
-        .md-sidebar--primary {
-            display: none !important;
-        }
-    }
-</style>
+## Vue d'ensemble
 
-# Nom du projet
+Cette plateforme web vise à aider les étudiants de l'Université de Montréal à faire des choix de cours éclairés en combinant des données officielles et des retours d'expérience étudiants.
 
-## Équipe
+## Problématique
 
-- **`M1`:** Membre 1 (matricule) #nom-utilisateur
-- **`M2`:** Membre 2 (matricule) #nom-utilisateur
-- **`M3`:** Membre 3 (matricule) #nom-utilisateur  
-- **`M4`:** Membre 4 (matricule) #nom-utilisateur
+Le choix de cours représente un défi important pour les étudiants du DIRO et de l'UdeM. Les difficultés incluent :
 
-## Description du projet
+- **Complexité structurelle** : Programmes parfois difficiles à comprendre
+- **Anticipation limitée** : Charge de travail, difficulté, rythme imprévisibles
+- **Profil varié** : Besoins différents selon le type d'étudiant
+- **Sources fragmentées** : Données officielles partielles, sources informelles dispersées
 
-## Échéancier
+## Solution Proposée
 
-| Taches                        | Terminé le    | Statut      | Responsable  |
-|-------------------------------|---------------|-------------|--------------|
-| Ouverture de projet           | 12 septembre  | ✅ Terminé  | `M1`         |
-| Description du domaine        | 19 septembre  | 🔄 En cours | `M1` `M2`    |
-| Identification des acteurs    | 19 septembre  | 🔄 En cours | `M2` `M3`    |
-| Glossaire                     | 21 septembre  | ⏳ À venir  | `M3`         |
-| Exigences Fonct et Non-Fonct  | 26 septembre  | ⏳ À venir  | `M1` `M4`    |
-| Évaluation des risques        | 26 septembre  | ⏳ À venir  | `M2`         |
-| Personas                      | 29 septembre  | ⏳ À venir  | `M1`         |
-| Cas d'utilisation             | 3 octobre     | ⏳ À venir  | `M3`         |
-| Diagramme d'activités         | 6 octobre     | ⏳ À venir  | `M4`         |
-| Modèle C4                     | 6 octobre     | ⏳ À venir  | `M3`         |
-| Prototype fonctionnel (bonus) | 10 octobre    | ⏳ À venir  | `M4`         |
-| Rapport                       | 10 octobre    | ⏳ À venir  | `M1`         |
+Une plateforme web accessible via API REST qui :
 
+- **Centralise** les données officielles (Planifium, résultats) et les avis étudiants
+- **Personnalise** l'affichage selon le profil de l'étudiant
+- **Facilite** la recherche, comparaison et prise de décision
+- **Respecte** la confidentialité et la législation (Loi 25)
+
+## Objectifs
+
+1. **Améliorer** la qualité des choix de cours
+2. **Réduire** l'incertitude dans la planification académique
+3. **Centraliser** les informations dispersées
+4. **Personnaliser** l'expérience selon le profil étudiant
+
+## Structure du Rapport
+
+Ce rapport présente l'analyse complète du projet :
+
+- **[Cadre du Projet](cadre-projet.md)** : Description, équipe, échéancier
+- **[Analyse des Exigences](analyse-exigences.md)** : Domaine, risques, besoins
+- **[Cas d'Utilisation](cas-utilisation.md)** : 9 CU détaillés avec scénarios
+- **[Conception](conception.md)** : Architecture C4 et modélisation
+
+## Technologies
+
+- **Backend** : API REST
+- **Frontend** : Interface web responsive
+- **Données** : API Planifium, CSV, JSON
+- **Documentation** : MkDocs + Material
