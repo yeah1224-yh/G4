@@ -14,9 +14,8 @@ comme ( des forums, Discord, bouche à oreille).
 
 ### Fonctionnement
 
-La platforme vise à aider les étudiants de l'Université de Montréal à choisir leurs
-cours en combinant des données o icielles (Planiﬁum, résultats académiques) avec
-des avis d'étudiants récupérés via Discord.
+La platforme vise à faciliter le choix des cours en fonction des programmes, la difficulté   
+l'exigence et charge de travail pour les étudiants(es) de l'Université de Montréal  
 
 ### Acteurs
 
@@ -32,13 +31,12 @@ des avis d'étudiants récupérés via Discord.
 1. **API Planifium** : Disponibilité et format des données
 2. **Réseau Discord** : Collecte des avis étudiants
 3. **Infrastructure UdeM** : Accès aux résultats académiques
-4. **Législation québécoise** : Conformité Loi 25
 
 ## Hypothèses et contraintes
 
 ### Contraintes organisationnelles      
 - Travail qu'en ligne sur github  
-- Emploi du temps de chaque membre different  
+- Emploi du temps de chaque membre différents  
 - Méthode de travail agile  
 
 ###Contraintes Communications   
@@ -51,12 +49,12 @@ des avis d'étudiants récupérés via Discord.
 - Serveur web sera Nginx + Gunicorn  
 - Framework principal sera React pour le front-end  
 - Le back-end sera développé en python  
-- L'API utilisée sera Planifium  
+- La loi 25 pour la protection des renseignements personnels
 - Discord servira à la collecte des données   
 - Les formats des données pris en charge seront CSV et JSON  
 
 ##Hypothèses de travail
-- On suppose que le platforme sera compatible avec tous les naigateurs populaire
+- On suppose que la platforme sera compatible avec tous les naigateurs populaire  
 - On suppose que les utilisateurs auront une connexion stable superieur ou égale à 10 Mbps  
 - On suppose que le système sera accessible depuis Windows, Linux, macOs, Android et iOS   
  
