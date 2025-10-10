@@ -313,3 +313,4 @@ graph TB
 **Choix** : JWT tokens
 **Justification** : Stateless, scalabilité, intégration mobile
 **Alternatives considérées** : Sessions serveur pour la sécurité
+

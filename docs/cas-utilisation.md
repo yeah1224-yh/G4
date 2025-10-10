@@ -487,3 +487,4 @@ L'administrateur souhaite effectuer des tâches de maintenance ou de configurati
 - [ ] Les métriques système sont disponibles
 - [ ] La gestion des utilisateurs fonctionne
 - [ ] Les logs d'administration sont complets
+

@@ -211,3 +211,4 @@ La plateforme de choix de cours fonctionne comme un système d'information centr
 - **Logs** : ELK Stack (Elasticsearch, Logstash, Kibana)
 - **Métriques** : Prometheus + Grafana
 - **Alertes** : Slack/Email pour les incidents critiques
+

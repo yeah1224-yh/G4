@@ -33,165 +33,27 @@ Ce projet présente l'analyse complète et le prototype d'une plateforme de choi
 
 ```
 IFT2255-Projet-Choix-Cours/
-├── 📋 Documentation complète (MkDocs)
-│   ├── docs/
-│   │   ├── index.md                    # Page d'accueil
-│   │   ├── cadre-projet.md            # Cadre du projet
-│   │   ├── analyse-exigences.md       # Analyse des exigences
-│   │   ├── cas-utilisation.md         # 9 cas d'utilisation détaillés
-│   │   └── conception.md              # Architecture C4 et modélisation
-│   ├── mkdocs.yml                     # Configuration MkDocs
-│   └── requirements.txt               # Dépendances Python
-├── 🎨 Prototype interactif (BONUS +5%)
-│   ├── index.html                     # Interface web moderne
-│   ├── script.js                      # Logique JavaScript
-│   └── Assets CSS/JS                  # Styles et fonctionnalités
-├── 📊 Rapport final
-│   ├── rapport-final.html             # Rapport HTML statique
-│   └── site/                          # Site MkDocs généré
-└── 🔧 Configuration
-    ├── setup-github.md                # Guide GitHub
-    └── README.md                      # Ce fichier
+├── docs/                          # Documentation MkDocs
+│   ├── index.md                   # Page d'accueil
+│   ├── cadre-projet.md           # Cadre du projet
+│   ├── analyse-exigences.md      # Analyse des exigences
+│   ├── cas-utilisation.md        # Cas d'utilisation détaillés
+│   └── conception.md             # Architecture C4 et modélisation
+├── mkdocs.yml                    # Configuration MkDocs
+├── requirements.txt              # Dépendances Python
+├── Pipfile                       # Configuration Pipenv
+└── README.md                     # Ce fichier
 ```
 
 ---
 
-## 🚀 Fonctionnalités du Prototype
-
-### ✅ Cas d'Utilisation Implémentés
-
-1. **🔍 UC1 - Recherche de cours**
-   - Recherche par code, titre ou mots-clés
-   - Filtrage par programme
-   - Affichage des résultats en cartes
-
-2. **📊 UC2 - Consultation des détails d'un cours**
-   - Informations complètes du cours
-   - Statistiques académiques
-   - Avis étudiants agrégés
-   - Modal détaillée
-
-3. **⚖️ UC3 - Comparaison de cours**
-   - Ajout de cours à la comparaison (max 3)
-   - Tableau comparatif dynamique
-   - Critères multiples (difficulté, charge, prérequis, etc.)
-
-4. **💬 UC4 - Consultation des avis étudiants**
-   - Affichage des avis avec notes
-   - Évaluation de la difficulté et charge de travail
-   - Seuil minimal respecté (n≥5 simulé)
-
-5. **👤 UC5 - Gestion du profil**
-   - Préférences théorie/pratique
-   - Centres d'intérêt
-   - Sauvegarde des préférences
-
----
-
-## 🛠️ Technologies Utilisées
-
-### Documentation
-- **MkDocs** : Génération de documentation
-- **Material Theme** : Interface moderne
-- **Mermaid** : Diagrammes intégrés
-
-### Prototype
-- **HTML5** : Structure sémantique
-- **CSS3** : Styles modernes avec Bootstrap 5
-- **JavaScript ES6** : Logique interactive
-- **Bootstrap 5** : Framework CSS responsive
-- **Font Awesome** : Icônes
-
-### Architecture
-- **Modèle C4** : Documentation d'architecture
-- **API REST** : Interface backend
-- **PostgreSQL** : Base de données
-- **Redis** : Cache
-
----
-
-## 📖 Comment Utiliser le Projet
-
-### 1. Consulter la Documentation
-
-```bash
-# Installer les dépendances
-pip install -r requirements.txt
-
-# Générer le site
-mkdocs build
-
-# Servir en local
-mkdocs serve
-# Ouvrir http://127.0.0.1:8000
-```
-
-### 2. Tester le Prototype
-
-Ouvrir `index.html` directement dans le navigateur ou utiliser un serveur local :
-
-```bash
-# Avec Python
-python -m http.server 8000
-
-# Avec Node.js
-npx serve .
-
-# Puis ouvrir http://localhost:8000
-```
-
-### 3. Démonstration des Scénarios
-
-#### Scénario 1 : Recherche et Consultation
-1. Rechercher "développement" ou "IFT"
-2. Cliquer sur "IFT2255 - Développement de logiciels"
-3. Consulter les détails, statistiques et avis
-4. Fermer la modal
-
-#### Scénario 2 : Comparaison de Cours
-1. Rechercher des cours d'informatique
-2. Ajouter "IFT2255" à la comparaison
-3. Ajouter "IFT2004" à la comparaison
-4. Ajouter "IFT3000" à la comparaison
-5. Consulter le tableau comparatif
-6. Vider la comparaison
-
-#### Scénario 3 : Gestion du Profil
-1. Cliquer sur "Profil" dans la navigation
-2. Modifier les préférences (théorie/pratique)
-3. Sélectionner des centres d'intérêt
-4. Sauvegarder le profil
-
----
-
-## 📊 Points Forts du Projet
-
-### ✅ Conformité Totale
-- **Tous les livrables** requis sont présents
-- **Qualité professionnelle** : Documentation structurée et complète
-- **Diagrammes Mermaid** : Intégrés et fonctionnels
-- **Prototype fonctionnel** : Démonstration interactive
-
-### ✅ Analyse Approfondie
-- **Risques identifiés** : 5 risques avec solutions concrètes
-- **Architecture détaillée** : Modèle C4 complet
-- **Cas d'utilisation** : 9 CU avec scénarios détaillés
-- **Besoins non fonctionnels** : 5 caractéristiques justifiées
-
-### ✅ Innovation et Bonus
-- **Prototype interactif** : Interface web moderne et fonctionnelle
-- **Données réalistes** : Simulation fidèle du domaine
-- **UX soignée** : Interface intuitive et responsive
-- **Documentation complète** : README détaillé pour le prototype
-
----
-
-## 🔧 Installation et Configuration
+## 🚀 Installation
 
 ### Prérequis
-- Python 3.8+ (pour MkDocs)
-- Navigateur web moderne (pour le prototype)
-- Git (pour la gestion de version)
+
+- Python **3.11** ou plus récent
+- `pip` (gestionnaire de paquets Python)
+- `pipenv` (gestion d'environnement virtuel)
 
 ### Installation Rapide
 
@@ -200,14 +62,43 @@ npx serve .
 git clone https://github.com/mamadou-traore/IFT2255-Projet-Choix-Cours.git
 cd IFT2255-Projet-Choix-Cours
 
+# Activer l'environnement virtuel
+pipenv shell
+
 # Installer les dépendances
 pip install -r requirements.txt
+```
 
-# Générer la documentation
-mkdocs build
+---
 
-# Lancer le serveur de développement
+## 📖 Utilisation
+
+### Développement local
+
+Pour lancer un serveur de développement local :
+
+```bash
 mkdocs serve
+```
+
+Le site sera accessible à l'adresse http://127.0.0.1:8000
+
+### Construction du site (optionnel)
+
+Pour construire le site :
+
+```bash
+mkdocs build
+```
+
+Les fichiers générés seront dans le dossier `site/`.
+
+### Déploiement sur GitHub Pages
+
+Pour déployer automatiquement le site sur GitHub Pages :
+
+```bash
+mkdocs gh-deploy
 ```
 
 ---
@@ -221,18 +112,11 @@ mkdocs serve
 - [x] **Conception** : Modèle C4 (niveau 1 et 2), diagrammes d'activités
 - [x] **Architecture technique** : Stack technologique, décisions architecturales
 
-### ✅ Prototype Interactif (BONUS)
-- [x] **Interface web moderne** : HTML5, CSS3, Bootstrap 5
-- [x] **5 cas d'utilisation implémentés** : Recherche, consultation, comparaison, avis, profil
-- [x] **Données simulées réalistes** : 4 cours avec avis et statistiques
-- [x] **Fonctionnalités avancées** : Recherche intelligente, comparaison dynamique
-- [x] **UX soignée** : Interface responsive et intuitive
-
 ### ✅ Configuration et Déploiement
 - [x] **Repository GitHub** : Structure complète et organisée
 - [x] **Documentation MkDocs** : Configuration et génération automatique
-- [x] **Guide de remise** : Instructions détaillées pour la soumission
-- [x] **Rapport final** : HTML statique et site MkDocs
+- [x] **Template Material** : Interface moderne et responsive
+- [x] **Diagrammes Mermaid** : Intégrés dans la documentation
 
 ---
 
@@ -268,4 +152,13 @@ Ce projet est développé dans le cadre académique du cours IFT2255 de l'Univer
 
 ---
 
+## 📚 Ressources utiles
+
+- [Documentation officielle MkDocs](https://www.mkdocs.org/)
+- [Thème Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+- [Template G4](https://github.com/yeah1224-yh/G4)
+
+---
+
 *Dernière mise à jour : Octobre 2025*
+

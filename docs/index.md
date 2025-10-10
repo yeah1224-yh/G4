@@ -44,3 +44,4 @@ Ce rapport présente l'analyse complète du projet :
 - **Frontend** : Interface web responsive
 - **Données** : API Planifium, CSV, JSON
 - **Documentation** : MkDocs + Material
+

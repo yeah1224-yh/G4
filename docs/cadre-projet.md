@@ -96,3 +96,4 @@ Une plateforme web accessible via API REST qui combine :
 3. **Utilisabilité** : Interface intuitive et accessible
 4. **Fiabilité** : Disponibilité > 99%
 5. **Sécurité** : Conformité légale et protection des données
+
