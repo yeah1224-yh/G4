@@ -1,0 +1,30 @@
+/* Masquer la barre latérale sur les pages spécifiques */
+@media screen and (min-width: 76em) {
+    .md-sidebar--primary {
+        display: none !important;
+    }
+    
+    .md-content {
+        margin-left: 0 !important;
+    }
+}
+
+/* Style pour les pages sans sidebar - meilleure mise en page */
+.no-sidebar {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Améliorer la lisibilité sur les grandes pages */
+.md-typeset {
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+/* Tables responsives */
+.md-typeset table:not([class]) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+}
+

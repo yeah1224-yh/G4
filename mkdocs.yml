@@ -5,49 +5,86 @@ site_url: https://mamadou-traore.github.io/IFT2255-Projet-Choix-Cours
 
 theme:
   name: material
+  language: fr
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - search.share
+    - content.tabs.link
+    - content.code.copy
+    - content.code.annotate
   palette:
     - scheme: default
       primary: blue
-      accent: light blue
+      accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
-      primary: blue
-      accent: light blue
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-  features:
-    - navigation.tabs
-    - navigation.sections
-    - navigation.expand
-    - navigation.path
-    - navigation.top
-    - search.highlight
-    - search.share
-    - content.code.copy
-    - content.code.annotate
+  font:
+    text: Roboto
+    code: Roboto Mono
+    
+copyright: "&copy; 2025 <b>Mamadou Traore</b> &ndash; Projet IFT2255 - Plateforme de Choix de Cours UdeM <br>Département d'informatique et de recherche opérationnelle <br>Université de Montréal"
 
-plugins:
-  - search
-  - mermaid2
+repo_name: G4
+repo_url: https://github.com/yeah1224-yh/G4
 
 markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
-  - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
-  - tables
+  - pymdownx.emoji
+  - pymdownx.keys
   - attr_list
-  - md_in_html
+  - def_list
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - tables
+
+plugins:
+  - search
+
+extra_css:
+  - css/no-sidebar.css
 
 nav:
-  - Accueil: index.md
-  - Cadre du Projet: cadre-projet.md
-  - Analyse des Exigences: analyse-exigences.md
-  - Cas d'Utilisation: cas-utilisation.md
-  - Conception: conception.md
-
+  - Vue d'ensemble: index.md
+  - Analyse des besoins: 
+    - Présentation générale: besoins/index.md
+    - Glossaire: besoins/glossaire.md
+    - Exigences: besoins/exigences.md
+    - Risques: besoins/risques.md
+    - Cas d'utilisation: besoins/cas-utilisation.md
+    - Flux principaux: besoins/flux-principaux.md
+  - Conception:
+    - Présentation générale: conception/index.md
+    - Architecture: conception/architecture.md
+    - Modèle de données: conception/modeles.md
+    - Diagrammes UML: conception/uml.md
+  - Application: application.md
+  - Evaluation: evaluation.md
+  - Bilan: bilan.md

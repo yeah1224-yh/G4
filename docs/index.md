@@ -1,10 +1,26 @@
+---
+title: Vue d'ensemble
+---
+
+<style>
+    @media screen and (min-width: 76em) {
+        .md-sidebar--primary {
+            display: none !important;
+        }
+    }
+</style>
+
 # Plateforme de Choix de Cours - UdeM
 
-## Vue d'ensemble
+## Équipe
+
+- **`M1`:** Mamadou Traore (20290120) #Dady
+
+## Description du projet
 
 Cette plateforme web vise à aider les étudiants de l'Université de Montréal à faire des choix de cours éclairés en combinant des données officielles et des retours d'expérience étudiants.
 
-## Problématique
+### Problématique
 
 Le choix de cours représente un défi important pour les étudiants du DIRO et de l'UdeM. Les difficultés incluent :
 
@@ -13,7 +29,7 @@ Le choix de cours représente un défi important pour les étudiants du DIRO et 
 - **Profil varié** : Besoins différents selon le type d'étudiant
 - **Sources fragmentées** : Données officielles partielles, sources informelles dispersées
 
-## Solution Proposée
+### Solution Proposée
 
 Une plateforme web accessible via API REST qui :
 
@@ -22,26 +38,24 @@ Une plateforme web accessible via API REST qui :
 - **Facilite** la recherche, comparaison et prise de décision
 - **Respecte** la confidentialité et la législation (Loi 25)
 
-## Objectifs
+### Technologies
 
-1. **Améliorer** la qualité des choix de cours
-2. **Réduire** l'incertitude dans la planification académique
-3. **Centraliser** les informations dispersées
-4. **Personnaliser** l'expérience selon le profil étudiant
-
-## Structure du Rapport
-
-Ce rapport présente l'analyse complète du projet :
-
-- **[Cadre du Projet](cadre-projet.md)** : Description, équipe, échéancier
-- **[Analyse des Exigences](analyse-exigences.md)** : Domaine, risques, besoins
-- **[Cas d'Utilisation](cas-utilisation.md)** : 9 CU détaillés avec scénarios
-- **[Conception](conception.md)** : Architecture C4 et modélisation
-
-## Technologies
-
-- **Backend** : API REST
-- **Frontend** : Interface web responsive
+- **Backend** : API REST (FastAPI ou Express.js)
+- **Frontend** : Interface web responsive (React.js ou Vue.js)
+- **Base de données** : PostgreSQL + Redis
 - **Données** : API Planifium, CSV, JSON
 - **Documentation** : MkDocs + Material
 
+## Échéancier
+
+| Taches                        | Terminé le    | Statut      | Responsable  |
+|-------------------------------|---------------|-------------|--------------|
+| Analyse du domaine            | 26 septembre  | ✅ Terminé  | `M1`         |
+| Ébauche cas d'utilisation     | 26 septembre  | ✅ Terminé  | `M1`         |
+| Glossaire                     | 2 octobre     | ✅ Terminé  | `M1`         |
+| Exigences Fonct et Non-Fonct  | 2 octobre     | ✅ Terminé  | `M1`         |
+| Évaluation des risques        | 2 octobre     | ✅ Terminé  | `M1`         |
+| Cas d'utilisation détaillés   | 5 octobre     | ✅ Terminé  | `M1`         |
+| Diagrammes d'activités        | 7 octobre     | ✅ Terminé  | `M1`         |
+| Modèle C4                     | 8 octobre     | ✅ Terminé  | `M1`         |
+| Rapport                       | 10 octobre    | ✅ Terminé  | `M1`         |
