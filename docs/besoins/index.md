@@ -26,7 +26,6 @@ l'exigence et charge de travail pour les étudiants(es) de l'Université de Mont
 - API Planifium : Fournit les données officielles des cours  
 - Discord : Collecte les avis étudiants via bot  
 - Technicien : Maintient et améliore la plateforme
-
 ### Dépendances
 1. **API Planifium** : Disponibilité et format des données
 2. **Réseau Discord** : Collecte des avis étudiants
@@ -57,5 +56,9 @@ l'exigence et charge de travail pour les étudiants(es) de l'Université de Mont
 - On suppose que la platforme sera compatible avec tous les naigateurs populaire  
 - On suppose que les utilisateurs auront une connexion stable superieur ou égale à 10 Mbps  
 - On suppose que le système sera accessible depuis Windows, Linux, macOs, Android et iOS   
- 
+- On suppose que les avis sur discord seront toujours disponibles
+- On suppose que l'API planifium sera toujours disponible
+- On suppose que le système sera toujours disponible pour les utilisateurs
+- On suppose que le système fonctionnera de manière correct 
+- On suppose que les feedback seront envoyer correctement. 
 

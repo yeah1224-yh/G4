@@ -12,12 +12,12 @@ title: Analyse des besoins - Exigences
 - [ ] Personnaliser son profil étudiant  
 - [ ] Consulter les avis agrégrés  
 - [ ] Mettre une commentaire  
-
+- [ ] Envoyer report pour le non fonctionnement correct du système
 ## Exigences non fonctionnelles
 
 - [ ] Planifium : L'API doit toujours répondre aux requêtes  
 - [ ] Disponibilité : Le système doit être disponible à 99.999%  
-- [ ] Temps de réponse : délais de réponse inferieur ou égale à 1.2 secondes pour toutes les requêtes  
+- [ ] Temps de réponse : délais de réponse inferieur ou égale à 2 secondes pour toutes les requêtes  
 - [ ] Maintenabilité : Code facile à maintenir et à faire évoluer  
 - [ ] Evolutif : Le système doit être capable de gérer l'augmentation du nombre d'utilisateurs  
 - [ ] Le platforme doit être compatible avec Chrome, brave, firefox, internet explorateur et ceux des android et iOS  
@@ -25,7 +25,7 @@ title: Analyse des besoins - Exigences
 ## Priorisation
  
 - Chiffrement des données sensibles  
-
+- 
 ## Types d'utilisateurs
 
 > Identifier les différents profils qui interagiront avec le système.
@@ -35,7 +35,7 @@ title: Analyse des besoins - Exigences
 | Étudiant | Utilisateur principal qui consulte et utilise la plateforme | Consulter la liste des cours, comparer la charge de travail, voir les statistiques de réussite |
 | API  | Fournit les données officielles des cours | Renvoie des données en fonction des requêtes demander  |
 | Discord | Collecte les avis étudiants via bot | Renvoie des données collecter |
-| Technicien | Maintient et améliore la plateforme | En cas de panne résoudre en moins de 24h, faire le suivie des infrastructure|  
+| Technicien | Maintient et améliore la plateforme | En cas de panne résoudre en moins de 24h, faire le suivie des infrastructures|  
 
 
 ## Infrastructures
@@ -48,4 +48,4 @@ title: Analyse des besoins - Exigences
 - Langage principal : Python, JavaScript  
 - Framework principal : React et Flash  
 - Outils de développement: Git, Docker, VSCode, nano  
-- Tests : Pytest, Postman, Selenium   
+- Outils de tests : Pytest, Postman, Selenium   

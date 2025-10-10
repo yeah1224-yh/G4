@@ -4,8 +4,6 @@ title: Analyse des besoins - Glossaire
 
 # Glossaire
 
-Ce glossaire définit les termes importants utilisés dans le projet, en particulier ceux q    ui pourraient prêter à confusion
-
 | Terme | Définition |
 |-------|------------|
 | Cours | Unité d'enseignement identiﬁ ée par un code (ex. IFT2255) |
@@ -20,4 +18,5 @@ Ce glossaire définit les termes importants utilisés dans le projet, en particu
 | Personnalisation | Adaptation de l'affichage selon le profil de l'étudiant |
 | Profil étudiant | Caractéristiques personnelles (préférences, centre d'intérêt) |
 | Seuil minimal | Nombre minimum d'avis requis pour afficher des statistiques | 
-
+| Mettre commentaire | Commentaire par des étudiants directement via la platforme|
+| Feedback étudiants | Commentaire envoyer en cas de panne |

@@ -6,18 +6,7 @@ title: Analyse des besoins - Risques
 
 ## Identification des risques
 
-TODO: Lister les principaux risques identifiés (techniques, humains, organisationnels).
-
-### Risque 1 – Absence prolongée d’un membre clé  
-
-- **Probabilité** : Moyenne  
-- **Impact** : Élevé  
-- **Plan de mitigation** :  
-  - Répartition claire des responsabilités  
-  - Documentation régulière du travail  
-  - Favoriser le pair programming
-
-### Risque 2 - Technique Indisponibilité de l'API Planifium
+### Risque 1 - Technique Indisponibilité de l'API Planifium
 **Description** : L'API Planifium devient indisponible ou change de format  
 **Impact** : Critique - Perte des données officielles principales  
 **Probabilité** : Moyenne  
@@ -26,7 +15,7 @@ TODO: Lister les principaux risques identifiés (techniques, humains, organisati
 - Accord de service avec l'UdeM  
 - Système de fallback avec données statiques  
 
-### Risque 3 -  Fonctionnel  Faible adoption étudiante
+### Risque 2 -  Fonctionnel  Faible adoption étudiante
 **Description** : Les étudiants n'utilisent pas la plateforme  
 **Impact** : Élevé - Échec du projet  
 **Probabilité** : Moyenne  
@@ -35,7 +24,7 @@ TODO: Lister les principaux risques identifiés (techniques, humains, organisati
 - Promotion active auprès des étudiants  
 - Intégration avec les systèmes existants  
 
-### Risque 4 -  Légal Non-conformité Loi 25
+### Risque 3 -  Légal Non-conformité Loi 25
 **Description** : Violation des réglementations sur la protection des données  
 **Impact** : Critique - Sanctions légales  
 **Probabilité** : Faible  
@@ -44,7 +33,7 @@ TODO: Lister les principaux risques identifiés (techniques, humains, organisati
 - Chiffrement des données personnelles  
 - Consentement explicite des utilisateurs  
 
-### Risque 5 -  Qualité Avis étudiants non pertinents
+### Risque 4 -  Qualité Avis étudiants non pertinents
 **Description** : Les retours d'expérience sont de mauvaise qualité  
 **Impact** : Moyen - Perte de valeur de la plateforme  
 **Probabilité** : Élevée  
@@ -53,7 +42,7 @@ TODO: Lister les principaux risques identifiés (techniques, humains, organisati
 - Validation des avis  
 - Incitation à la qualité  
 
-### Risque 6 -  Performance Surcharge du système
+### Risque 5 -  Performance Surcharge du système
 **Description** : La plateforme ne peut pas gérer le trafic  
 **Impact** : Élevé - Indisponibilité du service  
 **Probabilité** : Moyenne  
