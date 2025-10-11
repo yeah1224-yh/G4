@@ -14,10 +14,10 @@ title: Vue d'ensemble
 
 ## Équipe
 
-- **`M1`:** Membre 1 (matricule) #nom-utilisateur
-- **`M2`:** Membre 2 (matricule) #nom-utilisateur
-- **`M3`:** Membre 3 (matricule) #nom-utilisateur  
-- **`M4`:** Membre 4 (matricule) #nom-utilisateur
+- M1: Mahamadou Maiga (20223386) #YeaH
+- M2: Thomas Racine (20296005) #Bab0uchka
+- M3: Boubacar Cederic Diallo (20290623) #Bouba
+- M4: Mamadou Traore (20290120) #Dady
 
 ## Description du projet
 
@@ -26,7 +26,7 @@ title: Vue d'ensemble
 | Taches                        | Terminé le    | Statut      | Responsable  |
 |-------------------------------|---------------|-------------|--------------|
 | Ouverture de projet           | 12 septembre  | ✅ Terminé  | `M1`         |
-| Description du domaine        | 19 septembre  | 🔄 En cours | `M1` `M2`    |
+| Description du domaine        | 19 septembre  | ✅ Terminé | `M1` `M2`    |
 | Identification des acteurs    | 19 septembre  | ✅ Terminé | `M2` `M3`    |
 | Glossaire                     | 21 septembre  | ✅ Terminé  | `M3`         |
 | Exigences Fonct et Non-Fonct  | 26 septembre  | ✅ Terminé  | `M1` `M4`    |

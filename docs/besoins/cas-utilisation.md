@@ -59,61 +59,61 @@ title: Analyse des besoins - Cas d'utilisation
 **PostConditions** : rien  
 **Déclencheur** : lorsque l'étudiant clique sur Personnaliser Profil  
 **Dépendances** : rien  
-**But** : Choisir ce qui lui correspond  
+**But** : Choisir ces centres d'interêts  
 
 ### CU05 - Rechercher Cours
 
 **Acteurs** : Etudiant (principal)
-**Préconditions** :
-**PostConditions** :
-**Déclencheur** :   
-**Dépendances** :   
-**But** :
+**Préconditions** : rien  
+**PostConditions** : rien  
+**Déclencheur** : Clique sur rechercher  
+**Dépendances** : Planifium  
+**But** : Permettre de faire la rechercher d'un cours  
 
 ### CU06 - Mettre Commentaire
 
 **Acteurs** : Etudiant (principal)
-**Préconditions** :
-**PostConditions** :
-**Déclencheur** :   
-**Dépendances** :   
-**But** :
+**Préconditions** : Consulter Cours  
+**PostConditions** : Message de confirmation  
+**Déclencheur** : Lorsque l'étudiant clique sur Commentaire  
+**Dépendances** : Planifium  
+**But** : Permettre au étudiants qui n'utilise presque pas discord de mettre directement des commentaires via la platforme
 
 ### CU07 - Envoyer Report
 
-**Acteurs** : Etudiant (principal)
-**Préconditions** :
-**PostConditions** :
-**Déclencheur** :   
-**Dépendances** :   
-**But** :
+**Acteurs** : Etudiant (principal)  
+**Préconditions** : Panne du système  
+**PostConditions** : Message de confirmation  
+**Déclencheur** : Lorsque l'étudiant clique sur Envoyer Report  
+**Dépendances** : rien  
+**But** : Prevenir le technicien pour une panne critique  
 
 ### CU08 - Cours Informations
 
 **Acteurs** : API Planifium (secondaire)
-**Préconditions** :
-**PostConditions** :
-**Déclencheur** :   
-**Dépendances** :   
-**But** :
+**Préconditions** : Requête envoyer  
+**PostConditions** : Repondre au requête  
+**Déclencheur** : Lorsqu'une requête est faite  
+**Dépendances** : API Back-end  
+**But** : Envoyer les données disponibles 
 
 ### CU09 - Avis Etudiant
 
 **Acteurs** : Discord (secondaire)
-**Préconditions** :
-**PostConditions** :
-**Déclencheur** :   
-**Dépendances** :   
-**But** :
+**Préconditions** : Requête envoyer  
+**PostConditions** : Repondre au requête  
+**Déclencheur** : Lorsqu'une requête est faite  
+**Dépendances** : API Back-end  
+**But** : Envoyer les avis disponibles
 
 ### CU10 - Feedback
 
 **Acteurs** : Technicien (secondaire)
-**Préconditions** :
-**PostConditions** :
-**Déclencheur** :   
-**Dépendances** :   
-**But** :  
+**Préconditions** : Envoyer Report  
+**PostConditions** : Envoyer message au Technicien
+**Déclencheur** : Lorsqu'une panne critique est déclencher  
+**Dépendances** : Étudiant  
+**But** : Permettre au technicien de recevoir le message    
 
 ### CU11 - Autre Cours
 
