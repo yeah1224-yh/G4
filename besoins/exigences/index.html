@@ -587,6 +587,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#-chiffrement-des-donnees-sensibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      - Chiffrement des données sensibles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#types-dutilisateurs" class="md-nav__link">
     <span class="md-ellipsis">
       Types d'utilisateurs
@@ -953,6 +962,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#-chiffrement-des-donnees-sensibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      - Chiffrement des données sensibles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#types-dutilisateurs" class="md-nav__link">
     <span class="md-ellipsis">
       Types d'utilisateurs
@@ -991,21 +1009,26 @@
 
 <h1 id="exigences">Exigences<a class="headerlink" href="#exigences" title="Permanent link">&para;</a></h1>
 <h2 id="exigences-fonctionnelles">Exigences fonctionnelles<a class="headerlink" href="#exigences-fonctionnelles" title="Permanent link">&para;</a></h2>
-<p>TODO: Liste des fonctions que le système doit accomplir.</p>
-<p>Exemple :</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> EF1 : L’utilisateur peut créer un compte.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> EF2 : Le système envoie un courriel de confirmation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Rechercher des cours  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Consulter les détails d'un cours  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Comparer plusieurs cours  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Personnaliser son profil étudiant  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Consulter les avis agrégrés  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Mettre une commentaire  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Envoyer report pour le non fonctionnement correct du système</li>
 </ul>
 <h2 id="exigences-non-fonctionnelles">Exigences non fonctionnelles<a class="headerlink" href="#exigences-non-fonctionnelles" title="Permanent link">&para;</a></h2>
-<p>TODO: Contraintes de performance, sécurité, compatibilité, etc.</p>
-<p>Exemple :</p>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> ENF1 : Le système doit répondre en moins de 2 secondes.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> ENF2 : L'application doit être compatible avec Chrome et Firefox.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Planifium : L'API doit toujours répondre aux requêtes  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Disponibilité : Le système doit être disponible à 99.999%  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Temps de réponse : délais de réponse inferieur ou égale à 2 secondes pour toutes les requêtes  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Maintenabilité : Code facile à maintenir et à faire évoluer  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Evolutif : Le système doit être capable de gérer l'augmentation du nombre d'utilisateurs  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Le platforme doit être compatible avec Chrome, brave, firefox, internet explorateur et ceux des android et iOS  </li>
 </ul>
 <h2 id="priorisation">Priorisation<a class="headerlink" href="#priorisation" title="Permanent link">&para;</a></h2>
-<p>TODO: Identifier les exigences critiques.</p>
+<h2 id="-chiffrement-des-donnees-sensibles">- Chiffrement des données sensibles<a class="headerlink" href="#-chiffrement-des-donnees-sensibles" title="Permanent link">&para;</a></h2>
 <h2 id="types-dutilisateurs">Types d'utilisateurs<a class="headerlink" href="#types-dutilisateurs" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Identifier les différents profils qui interagiront avec le système.</p>
@@ -1020,35 +1043,40 @@
 </thead>
 <tbody>
 <tr>
-<td>Utilisateur invité</td>
-<td>Accès limité, pas d’authentification</td>
-<td>Consultation des ressources</td>
+<td>Étudiant</td>
+<td>Utilisateur principal qui consulte et utilise la plateforme</td>
+<td>Consulter la liste des cours, comparer la charge de travail, voir les statistiques de réussite</td>
 </tr>
 <tr>
-<td>Utilisateur authentifié</td>
-<td>Compte personnel, fonctions principales</td>
-<td>Réservation, historique</td>
+<td>API</td>
+<td>Fournit les données officielles des cours</td>
+<td>Renvoie des données en fonction des requêtes demander</td>
 </tr>
 <tr>
-<td>Administrateur</td>
-<td>Droits étendus, gestion des ressources</td>
-<td>Création/suppression de ressources, gestion des utilisateurs</td>
+<td>Discord</td>
+<td>Collecte les avis étudiants via bot</td>
+<td>Renvoie des données collecter</td>
+</tr>
+<tr>
+<td>Technicien</td>
+<td>Maintient et améliore la plateforme</td>
+<td>En cas de panne résoudre en moins de 24h, faire le suivie des infrastructures</td>
 </tr>
 </tbody>
 </table>
-<!-- TODO: Détailler selon le périmètre du projet. -->
-
 <h2 id="infrastructures">Infrastructures<a class="headerlink" href="#infrastructures" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Informations sur l’environnement d’exécution cible, les outils ou plateformes nécessaires.</p>
 </blockquote>
 <ul>
-<li>Le système sera hébergé sur un serveur Ubuntu 22.04.</li>
-<li>Base de données : PostgreSQL version 15.</li>
-<li>Serveur Web : Nginx + Gunicorn (pour une app Python, par exemple).</li>
-<li>Framework principal : [À spécifier selon le projet].</li>
+<li>Le système sera hébergé sur un serveur Ubuntu 22.04.  </li>
+<li>Base de données : PostgreSQL version 15.  </li>
+<li>Serveur Web : Nginx + Gunicorn (pour une app Python, par exemple).  </li>
+<li>Langage principal : Python, JavaScript  </li>
+<li>Framework principal : React et Flash  </li>
+<li>Outils de développement: Git, Docker, VSCode, nano  </li>
+<li>Outils de tests : Pytest, Postman, Selenium   </li>
 </ul>
-<!-- TODO: Compléter selon le stack technique prévu. -->
 
 
 
