@@ -1,0 +1,52 @@
+site_name: Plateforme de Choix de Cours - UdeM
+site_description: Analyse des besoins et conception d'une plateforme d'aide au choix de cours
+site_author: Équipe IFT2255
+site_url: https://github.com/username/devoir-ift2255
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mermaid2
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - Accueil: index.md
+  - Cadre du Projet: cadre-projet.md
+  - Analyse des Exigences: analyse-exigences.md
+  - Cas d'Utilisation: cas-utilisation.md
+  - Conception: conception.md
