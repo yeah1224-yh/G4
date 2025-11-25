@@ -23,5 +23,3 @@ title: Conception - Architecture
 - Format des données : JSON, XML, etc.
 
 ## Diagramme d’architecture (Modèle C4)
-    class AUTH,ETUD,TECH module
-    class DB data
