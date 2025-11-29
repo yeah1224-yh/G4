@@ -6,13 +6,13 @@ title: Conception - Architecture
 
 ## Vue d’ensemble
 
-- Description du type d’architecture retenue (ex. : monolithique, microservices, REST...)
-- Raisons du choix
+- Architecture MVC et micro-service combiner est utiliser pour ce projet
+- l'API REST est en MVC et le front-ent est implementé en React ou plusieurs de ses modules  
+peuvent être implementer independenment 
 
 ## Composants principaux
 
 - Liste des modules ou services :
-  - Module d’authentification
   - Gestion des utilisateurs
   - Interface (frontend)
   - API backend
@@ -22,5 +22,4 @@ title: Conception - Architecture
 - Mécanismes d’échange : appels HTTP, WebSocket, messages, etc.
 - Format des données : JSON, XML, etc.
 
-## Diagramme d’architecture (Modèle C4)
 

@@ -1,13 +1,5 @@
 ---
-title: Conception - Diagrammes UML
+title: Conception - Diagrammes 
 ---
 
-# Diagrammes UML
-
-## Diagrammes de classes
-
-- Modèle de données orienté objet
-
-## Diagrammes de séquence
-
-- Exécution pas à pas d’un scénario type
+## Pour tous ce qui est diagrammes, voir le dossier diagram/Image s'il vous plaît.
