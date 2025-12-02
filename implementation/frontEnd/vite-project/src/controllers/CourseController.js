@@ -1,13 +1,18 @@
-import { fetchAllCourses } from "../api/coursesApi";
+import { useCoursesCache } from "./controllers/CoursesCache.jsx"; 
 
 export async function loadCourses(setCourses, setLoading) {
+    const { courses, loadCourses: loadCoursesFromCache } = useCoursesCache();
+
+    setLoading(true);
+
     try {
-        const data = await fetchAllCourses();
+        // Si le cache existe déjà, on l'utilise, sinon on fait la requête
+        const data = courses || await loadCoursesFromCache();
         setCourses(data);
     } catch (err) {
-          console.error("Erreur dans loadCourses :", err);
+        console.error("Erreur dans loadCourses :", err);
     } finally {
-          setLoading(false);
+        setLoading(false);
     }
 }
 

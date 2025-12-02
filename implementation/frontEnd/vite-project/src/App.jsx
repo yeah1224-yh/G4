@@ -1,17 +1,18 @@
-import { useState } from 'react'
-import {BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomeController from "./controllers/HomeController.jsx";
-
+import { CoursesCacheProvider } from "./controllers/CoursesCache.jsx"; 
 
 function App() {
-
     return (
-        <BrowserRouter>
-            <Routes>
-	        <Route path="/" element={<HomeController/>} />
-            </Routes>
-        </BrowserRouter>
+        <CoursesCacheProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<HomeController />} />
+                </Routes>
+            </BrowserRouter>
+        </CoursesCacheProvider>
     );
 }
 
 export default App;
+
