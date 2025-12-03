@@ -15,7 +15,7 @@ function buildQueryString(params = {}) {
 }
 
 // Départements à charger
-const DEPARTMENTS = ["IFT", "MAT", "PHY", "STA", "CHM", "BIO"];
+const DEPARTMENTS = ["IFT", "MAT"];
 
 /**
  * Récupère tous les cours pour chaque département
@@ -25,12 +25,14 @@ export async function fetchAllCourses(queryParams = {}) {
     try {
         let allCourses = [];
         const seen = new Set();
+        
         for (const dep of DEPARTMENTS) {
             const params = { ...queryParams, sigle: dep, response_level: "full" };
             const qs = buildQueryString(params);
             const res = await fetch(`${api}/courses${qs}`);
             const courses = res.ok ? await res.json() : [];
             console.log(`Loaded ${courses.length} ${dep} courses`);
+            
             for (const course of courses) {
                 if (!seen.has(course.id)) {
                     allCourses.push(course);
@@ -38,6 +40,7 @@ export async function fetchAllCourses(queryParams = {}) {
                 }
             }
         }
+        
         console.log(`Total: ${allCourses.length} unique courses loaded`);
         return allCourses;
     } catch (error) {
@@ -54,27 +57,26 @@ export async function fetchCourseById(id, queryParams = {}) {
     const queryString = buildQueryString(params);
     const url = `${api}/courses/${id}${queryString}`;
     const res = await fetch(url);
+    
     if (!res.ok) {
         throw new Error(`Cours ${id} introuvable`);
     }
+    
     return await res.json();
 }
 
 /**
- * Récupère tous les cours commençant par un préfixe (ex: "IFT", "MAT2", "PHY1")
+ * Récupère tous les cours commençant par un préfixe (ex: "IFT", "MAT", "PHY")
  */
 export async function fetchCoursesByPrefix(prefix, queryParams = {}) {
     console.log(`Searching courses with prefix: ${prefix}`);
-    
     const params = {
         response_level: "full",
         sigle: prefix,
         ...queryParams
     };
-    
     const queryString = buildQueryString(params);
     const url = `${api}/courses${queryString}`;
-    
     const res = await fetch(url);
     
     if (!res.ok) {
@@ -83,7 +85,6 @@ export async function fetchCoursesByPrefix(prefix, queryParams = {}) {
     
     const courses = await res.json();
     console.log(`Found ${courses.length} courses with prefix ${prefix}`);
-    
     return courses;
 }
 
@@ -93,9 +94,11 @@ export async function fetchCoursesByPrefix(prefix, queryParams = {}) {
 export async function fetchCoursePrerequisites(id) {
     const url = `${api}/courses/${id}/prerequisites`;
     const res = await fetch(url);
+    
     if (!res.ok) {
         throw new Error(`Impossible de récupérer les prérequis du cours ${id}`);
     }
+    
     return await res.json();
 }
 
@@ -111,8 +114,10 @@ export async function fetchCoursesDependency(courseIds = []) {
     const qs = buildQueryString(params);
     const url = `${api}/courses-dependency${qs}`;
     const res = await fetch(url);
+    
     if (!res.ok) {
         throw new Error("Impossible de récupérer le graphe de dépendances");
     }
+    
     return await res.json();
 }

@@ -3,64 +3,41 @@ import ConsulterListeView from "../views/ConsulterListeView.jsx";
 import ComparerCoursView from "../views/ComparerCoursView.jsx";
 import { useCoursesCache } from "../controllers/CoursesCache.jsx";
 
+// Fonction principale
+
 export default function HomeController() {
     const [activeTab, setActiveTab] = useState("accueil");
     const { selectedProgram } = useCoursesCache();
 
+    // Navigation entre les onglets
+
+    const consulterListeCours = () => {
+        setActiveTab("liste");
+    };
+
+    const comparerCours = () => {
+        setActiveTab("comparer");
+    };
+
+    const retourAccueil = () => {
+        setActiveTab("accueil");
+    };
+
+    // Rendu conditionnel des onglets
     const renderTab = () => {
         switch (activeTab) {
             case "liste":
-                return <ConsulterListeView goHome={() => setActiveTab("accueil")} />;
+                return <ConsulterListeView goHome={retourAccueil} />;
             case "comparer":
-                return <ComparerCoursView goHome={() => setActiveTab("accueil")} />;
+                return <ComparerCoursView goHome={retourAccueil} />;
             case "accueil":
             default:
                 return (
-                    <div style={styles.container}>
-                        {/* Hero principal */}
-                        <div style={styles.hero}>
-                            <div style={styles.heroContent}>
-                                <h1 style={styles.title}>
-                                    Planifiez votre parcours académique
-                                </h1>
-                                <p style={styles.subtitle}>
-                                    Explorez, comparez et organisez vos cours facilement et efficacement.
-                                </p>
-
-                                {selectedProgram && (
-                                    <div style={styles.programBadge}>
-                                        Programme sélectionné : <strong>{selectedProgram.name}</strong>
-                                    </div>
-                                )}
-
-                                <div style={styles.buttonsContainer}>
-                                    <button
-                                        style={{ ...styles.button, backgroundColor: "#1e3a8a" }}
-                                        onClick={() => setActiveTab("liste")}
-                                    >
-                                        Consulter les cours
-                                    </button>
-                                    <button
-                                        style={{ ...styles.button, backgroundColor: "#2563eb" }}
-                                        onClick={() => setActiveTab("comparer")}
-                                    >
-                                        Comparer les cours
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div style={styles.heroIllustration}>
-                    
-                            </div>
-                        </div>
-
-                        <div style={styles.infoSection}>
-                            <p style={styles.infoText}>
-                                Gérez vos cours, comparez les prérequis et planifiez vos sessions en toute simplicité. 
-                                Tout est intégré pour vous donner une expérience fluide.
-                            </p>
-                        </div>
-                    </div>
+                    <AccueilView 
+                        selectedProgram={selectedProgram}
+                        consulterListeCours={consulterListeCours}
+                        comparerCours={comparerCours}
+                    />
                 );
         }
     };
@@ -72,6 +49,78 @@ export default function HomeController() {
     );
 }
 
+// Vue Accueil
+function AccueilView({ selectedProgram, consulterListeCours, comparerCours }) {
+    return (
+        <div style={styles.container}>
+            <div style={styles.hero}>
+                <HeroContent 
+                    selectedProgram={selectedProgram}
+                    consulterListeCours={consulterListeCours}
+                    comparerCours={comparerCours}
+                />
+                <HeroIllustration />
+            </div>
+
+            <InfoSection />
+        </div>
+    );
+}
+
+function HeroContent({ selectedProgram, consulterListeCours, comparerCours }) {
+    return (
+        <div style={styles.heroContent}>
+            <h1 style={styles.title}>
+                Planifiez votre parcours académique
+            </h1>
+            <p style={styles.subtitle}>
+                Explorez, comparez et organisez vos cours facilement et efficacement.
+            </p>
+
+            {selectedProgram && (
+                <div style={styles.programBadge}>
+                    Programme sélectionné : <strong>{selectedProgram.name}</strong>
+                </div>
+            )}
+
+            <div style={styles.buttonsContainer}>
+                <button
+                    style={{ ...styles.button, backgroundColor: "#1e3a8a" }}
+                    onClick={consulterListeCours}
+                >
+                    Consulter les cours
+                </button>
+                <button
+                    style={{ ...styles.button, backgroundColor: "#2563eb" }}
+                    onClick={comparerCours}
+                >
+                    Comparer les cours
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function HeroIllustration() {
+    return (
+        <div style={styles.heroIllustration}>
+            {/* Espace pour illustration future */}
+        </div>
+    );
+}
+
+function InfoSection() {
+    return (
+        <div style={styles.infoSection}>
+            <p style={styles.infoText}>
+                Gérez vos cours, comparez les prérequis et planifiez vos sessions en toute simplicité. 
+                Tout est intégré pour vous donner une expérience fluide.
+            </p>
+        </div>
+    );
+}
+
+// Styles
 const styles = {
     container: {
         width: "100vw",

@@ -3,23 +3,28 @@ import { useCoursesCache } from "../controllers/CoursesCache.jsx";
 import { fetchCourseById, fetchCoursesByPrefix } from "../api/coursesApi.js";
 import CourseCard from "./CourseCard.jsx";
 
+const ITEMS_PER_PAGE = 50;
+const MIN_SIGLE_LENGTH = 6;
+
 export default function ConsulterListeView({ goHome }) {
+    // États pour gérer les cours et la recherche
     const { courses, loadCourses, loading, error } = useCoursesCache();
     const [searchId, setSearchId] = useState("");
-    const [searchResults, setSearchResults] = useState(null); // résultats API (tableau)
+    const [searchResults, setSearchResults] = useState(null);
     const [apiLoading, setApiLoading] = useState(false);
     const [apiError, setApiError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const ITEMS_PER_PAGE = 50;
 
-    // Charger le cache si vide
+    // Chargement initial des cours
     useEffect(() => {
         if (!courses) {
-            loadCourses().catch(err => console.error("Erreur lors du chargement des cours :", err));
+            loadCourses().catch(err => 
+                console.error("Erreur lors du chargement des cours :", err)
+            );
         }
     }, []);
 
-    // Si champ vide → revenir à l'affichage cache
+    // Réinitialisation si la recherche est vide
     useEffect(() => {
         if (!searchId.trim()) {
             setSearchResults(null);
@@ -28,6 +33,26 @@ export default function ConsulterListeView({ goHome }) {
         }
     }, [searchId]);
 
+    // Vérification si le sigle est complet
+    const isCompleteSigle = (sigle) => sigle.length >= MIN_SIGLE_LENGTH;
+
+    // Recherche d'un cours par son ID complet
+    const rechercherCoursParId = async (sigle) => {
+        const data = await fetchCourseById(sigle);
+        setSearchResults([data]);
+    };
+
+    // Recherche de cours par préfixe
+    const rechercherCoursParPrefix = async (prefix) => {
+        const data = await fetchCoursesByPrefix(prefix);
+        if (data.length === 0) {
+            setApiError(`Aucun cours trouvé commençant par "${prefix}"`);
+        } else {
+            setSearchResults(data);
+        }
+    };
+
+    // Gestion de la recherche
     const handleSearch = async () => {
         const trimmedId = searchId.trim().toUpperCase();
         if (!trimmedId) return;
@@ -37,19 +62,10 @@ export default function ConsulterListeView({ goHome }) {
         setSearchResults(null);
 
         try {
-            // Si c'est un sigle complet (ex: IFT2255), chercher ce cours exact
-            if (trimmedId.length >= 6) {
-                const data = await fetchCourseById(trimmedId);
-                setSearchResults([data]);
-            } 
-            // Sinon, chercher tous les cours commençant par ce préfixe
-            else {
-                const data = await fetchCoursesByPrefix(trimmedId);
-                if (data.length === 0) {
-                    setApiError(`Aucun cours trouvé commençant par "${trimmedId}"`);
-                } else {
-                    setSearchResults(data);
-                }
+            if (isCompleteSigle(trimmedId)) {
+                await rechercherCoursParId(trimmedId);
+            } else {
+                await rechercherCoursParPrefix(trimmedId);
             }
         } catch (err) {
             setApiError(err.message || "Erreur lors de la recherche");
@@ -58,14 +74,20 @@ export default function ConsulterListeView({ goHome }) {
         }
     };
 
-    // Gérer la touche "Enter" dans l'input
+    // Recherche avec la touche Enter
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleSearch();
         }
     };
 
-    // Choisir les cours à afficher : soit résultats recherche, soit cache
+    // Navigation entre les pages
+    const goToPage = (page) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Calcul des cours à afficher selon la page
     const displayedCourses = searchResults 
         ? searchResults.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
         : courses?.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE) || [];
@@ -74,78 +96,114 @@ export default function ConsulterListeView({ goHome }) {
         ? Math.ceil(searchResults.length / ITEMS_PER_PAGE)
         : Math.ceil((courses?.length || 0) / ITEMS_PER_PAGE);
 
-    const goToPage = (page) => {
-        setCurrentPage(page);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    const isLoading = loading || apiLoading;
+    const hasError = apiError;
+    const hasNoCourses = !isLoading && !hasError && displayedCourses.length === 0;
 
     return (
         <div style={styles.container}>
             <div style={styles.listBlock}>
-                <div style={styles.topRow}>
-                    <button onClick={goHome} style={styles.backButton}>
-                        Retour à l'accueil
-                    </button>
-                    <div style={styles.searchWrapper}>
-                        <input
-                            type="text"
-                            placeholder="Ex: ift, mat2255"
-                            value={searchId}
-                            onChange={e => setSearchId(e.target.value)}
-                            onKeyPress={handleKeyPress}
-                            style={styles.searchInput}
-                            disabled={loading || apiLoading}
-                        />
-                        <button 
-                            onClick={handleSearch} 
-                            style={styles.searchButton} 
-                            disabled={loading || apiLoading || !searchId.trim()}
-                        >
-                            Rechercher
-                        </button>
-                    </div>
-                </div>
+                {/* Barre de navigation et recherche */}
+                <TopBar 
+                    goHome={goHome}
+                    searchId={searchId}
+                    setSearchId={setSearchId}
+                    handleSearch={handleSearch}
+                    handleKeyPress={handleKeyPress}
+                    isLoading={isLoading}
+                />
 
-                <div style={styles.coursesContainer}>
-                    {(loading || apiLoading) && <p>Chargement des cours...</p>}
-                    
-                    {apiError && <p style={styles.error}>{apiError}</p>}
-                    
-                    {!loading && !apiLoading && !apiError && displayedCourses.length === 0 && (
-                        <p>Aucun cours à afficher</p>
-                    )}
-                    
-                    {!loading && !apiLoading && !apiError && displayedCourses.map(course => (
-                        <CourseCard key={course.id} course={course} />
-                    ))}
-                </div>
+                {/* Grille des cours */}
+                <CoursesGrid 
+                    isLoading={isLoading}
+                    hasError={hasError}
+                    errorMessage={apiError}
+                    hasNoCourses={hasNoCourses}
+                    courses={displayedCourses}
+                />
 
+                {/* Pagination */}
                 {totalPages > 1 && (
-                    <div style={styles.pagination}>
-                        <button
-                            onClick={() => goToPage(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            style={styles.pageButton}
-                        >
-                            ← Précédent
-                        </button>
-                        <span style={styles.pageInfo}>
-                            Page {currentPage} sur {totalPages}
-                        </span>
-                        <button
-                            onClick={() => goToPage(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                            style={styles.pageButton}
-                        >
-                            Suivant →
-                        </button>
-                    </div>
+                    <Pagination 
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        goToPage={goToPage}
+                    />
                 )}
             </div>
         </div>
     );
 }
 
+// Composant pour la barre supérieure
+function TopBar({ goHome, searchId, setSearchId, handleSearch, handleKeyPress, isLoading }) {
+    return (
+        <div style={styles.topRow}>
+            <button onClick={goHome} style={styles.backButton}>
+                Retour à l'accueil
+            </button>
+            <div style={styles.searchWrapper}>
+                <input
+                    type="text"
+                    placeholder="Ex: ift, mat2255"
+                    value={searchId}
+                    onChange={e => setSearchId(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    style={styles.searchInput}
+                    disabled={isLoading}
+                />
+                <button 
+                    onClick={handleSearch} 
+                    style={styles.searchButton} 
+                    disabled={isLoading || !searchId.trim()}
+                >
+                    Rechercher
+                </button>
+            </div>
+        </div>
+    );
+}
+
+// Composant pour afficher la grille de cours
+function CoursesGrid({ isLoading, hasError, errorMessage, hasNoCourses, courses }) {
+    return (
+        <div style={styles.coursesContainer}>
+            {isLoading && <p>Chargement des cours...</p>}
+            {hasError && <p style={styles.error}>{errorMessage}</p>}
+            {hasNoCourses && <p>Aucun cours à afficher</p>}
+            {!isLoading && !hasError && courses.map(course => (
+                <CourseCard key={course.id} course={course} />
+            ))}
+        </div>
+    );
+}
+
+// Composant de pagination
+function Pagination({ currentPage, totalPages, goToPage }) {
+    return (
+        <div style={styles.pagination}>
+            <button
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                style={styles.pageButton}
+            >
+                ← Précédent
+            </button>
+            <span style={styles.pageInfo}>
+                Page {currentPage} sur {totalPages}
+            </span>
+            <button
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                style={styles.pageButton}
+            >
+                Suivant →
+            </button>
+        </div>
+    );
+}
+
+// Styles CSS-in-JS
 const styles = {
     container: { 
         width: "100vw", 
@@ -206,15 +264,6 @@ const styles = {
         fontSize: "14px",
         fontWeight: "600",
         transition: "background-color 0.2s"
-    },
-    resultsInfo: {
-        padding: "10px",
-        backgroundColor: "#e7f3ff",
-        borderRadius: "6px",
-        fontSize: "14px",
-        fontWeight: "500",
-        color: "#0066cc",
-        textAlign: "center"
     },
     coursesContainer: { 
         display: "flex", 
