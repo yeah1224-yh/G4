@@ -1,7 +1,7 @@
 ## Structure complet de l'API Backend
 
 ```sh
-ift2255-template-javalin/
+back-end/
 ├── rest-api/
 │   ├── src/
 │   │   ├── main/
