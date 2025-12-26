@@ -1,118 +1,301 @@
+// src/views/ComparerCoursView.jsx
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useCoursesCache } from "../controllers/CoursesCache.jsx";
-import { fetchCourseById, fetchCoursesByPrefix } from "../api/coursesApi.js";
+import {
+  fetchCourseById,
+  fetchCoursesByPrefix,
+  fetchAvisByCourseId,
+  fetchCourseStats,
+} from "../api/coursesApi.js";
+import "../styles/ComparerCours.css";
+import "../styles/CourseCard2.css";
 
-const ITEMS_PER_PAGE = 20;        // Nombre de cours affichés par page dans la modale
-const MIN_SIGLE_LENGTH = 6;       // Longueur minimale pour considérer un sigle comme complet (ex: IFT1010)
+/* Constantes de configuration */
+const ITEMS_PER_PAGE = 20;           // Nombre de cours par page dans la modal
+const MIN_SIGLE_LENGTH = 6;          // Longueur minimale pour recherche exacte
+const LANG_KEY = "ift2255_langue";   // Clé localStorage pour la langue
 
-// Composant principal : Vue de comparaison de deux cours
+/* Objets de traduction i18n */
+const txt = {
+  fr: {
+    backHome: "Retour à l'accueil",
+    selectCourse: "Cliquer pour choisir cours",
+    sameCoursError: "Impossible de sélectionner le même cours pour les deux slots.",
+    chooseCourse: "Choisir un cours",
+    search: "Rechercher",
+    loading: "Chargement des cours...",
+    noCoursesFound: (p) => `Aucun cours trouvé pour "${p}"`,
+    previous: "Précédent",
+    next: "Suivant",
+    page: "Page",
+    of: "sur",
+    close: "Fermer",
+    comparing: "Comparaison...",
+    compare: "Comparer",
+    comparisonResult: "Résultat de la comparaison",
+    academicAverage: "Moyenne académique",
+    successScore: "Score de réussite",
+    participants: "Participants",
+    difficulty: "Difficulté",
+    difficult: "Difficile",
+    medium: "Moyen",
+    easy: "Facile",
+    credits: "Crédits",
+    schedule: "Horaires",
+    session: "Session",
+    prerequisite: "Préalable",
+    none: "Aucun",
+    notSpecified: "Non spécifié",
+    ex: "Ex",
+    loadingError: "Erreur lors du chargement des données de comparaison.",
+    autumn: "Automne",
+    winter: "Hiver",
+    summer: "Été",
+  },
+  en: {
+    backHome: "Back to Home",
+    selectCourse: "Click to select course",
+    sameCoursError: "Cannot select the same course for both slots.",
+    chooseCourse: "Choose a course",
+    search: "Search",
+    loading: "Loading courses...",
+    noCoursesFound: (p) => `No courses found for "${p}"`,
+    previous: "Previous",
+    next: "Next",
+    page: "Page",
+    of: "of",
+    close: "Close",
+    comparing: "Comparing...",
+    compare: "Compare",
+    comparisonResult: "Comparison Result",
+    academicAverage: "Academic Average",
+    successScore: "Success Score",
+    participants: "Participants",
+    difficulty: "Difficulty",
+    difficult: "Difficult",
+    medium: "Medium",
+    easy: "Easy",
+    credits: "Credits",
+    schedule: "Schedule",
+    session: "Session",
+    prerequisite: "Prerequisite",
+    none: "None",
+    notSpecified: "Not specified",
+    ex: "E.g.",
+    loadingError: "Error loading comparison data.",
+    autumn: "Fall",
+    winter: "Winter",
+    summer: "Summer",
+  },
+};
+
+/* Fonction utilitaire : formatage des horaires */
+function formatSchedules(schedules = [], t) {
+  if (!Array.isArray(schedules) || schedules.length === 0) return t.notSpecified;
+  const items = schedules
+    .filter(
+      (s) =>
+        s &&
+        typeof s.day === "string" &&
+        typeof s.start === "string" &&
+        typeof s.end === "string"
+    )
+    .map((s) => `${s.day} ${s.start}-${s.end}`);
+  return items.length > 0 ? items.join(", ") : t.notSpecified;
+}
+
+/* Fonction utilitaire : formatage des sessions */
+function formatTerms(terms, t) {
+  if (!terms) return t.notSpecified;
+  const termLabels = {
+    autumn: t.autumn,
+    winter: t.winter,
+    summer: t.summer,
+  };
+  const active = Object.entries(terms)
+    .filter(([, v]) => v)
+    .map(([k]) => termLabels[k] || k);
+  return active.length > 0 ? active.join(", ") : t.notSpecified;
+}
+
+/* Fonction utilitaire : nettoyage du prérequis */
+function cleanPrerequisite(text, t) {
+  if (!text) return t.none;
+  return text.replace(/^prerequisite_courses\s*:\s*/i, "").trim();
+}
+
+/* Fonction utilitaire : résumé des avis */
+function buildAvisSummary(avisList = []) {
+  if (!Array.isArray(avisList) || avisList.length === 0) {
+    return { count: 0, avgNote: null, avgDiff: null, avgWork: null };
+  }
+  let sumNote = 0, sumDiff = 0, sumWork = 0;
+  let nNote = 0, nDiff = 0, nWork = 0;
+
+  for (const a of avisList) {
+    if (a.note != null) {
+      sumNote += a.note;
+      nNote++;
+    }
+    if (a.difficulte != null) {
+      sumDiff += a.difficulte;
+      nDiff++;
+    }
+    if (a.volumeTravail != null) {
+      sumWork += a.volumeTravail;
+      nWork++;
+    }
+  }
+
+  const round1 = (x, n) => (n > 0 ? Math.round((x / n) * 10) / 10 : null);
+
+  return {
+    count: avisList.length,
+    avgNote: round1(sumNote, nNote),
+    avgDiff: round1(sumDiff, nDiff),
+    avgWork: round1(sumWork, nWork),
+  };
+}
+
+/* Fonction utilitaire : difficulté basée sur la moyenne */
+function getDifficultyFromMoyenne(moyenne, t) {
+  if (!moyenne) return "—";
+
+  const gradeOrder = [
+    "E", "D-", "D", "D+", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+",
+  ];
+  const index = gradeOrder.indexOf(moyenne);
+
+  if (index === -1) return "—";
+  if (index <= 4) return t.difficult;
+  if (index <= 7) return t.medium;
+  return t.easy;
+}
+
+/* Composant principal ComparerCoursView */
 export default function ComparerCoursView({ goHome }) {
-  // États principaux
-  const { courses, loadCourses, loading } = useCoursesCache(); // Cache global des cours
-  const [selected1, setSelected1] = useState(null);             // Cours sélectionné dans le slot 1
-  const [selected2, setSelected2] = useState(null);             // Cours sélectionné dans le slot 2
-  const [openModal, setOpenModal] = useState(false);            // Ouverture/fermeture de la modale de sélection
-  const [currentTarget, setCurrentTarget] = useState(null);     // Indique quel slot (1 ou 2) est en cours de remplissage
+  /* Hooks du cache des cours */
+  const { courses, loadCourses, loading } = useCoursesCache();
 
-  // États liés à la recherche dans la modale
-  const [searchTerm, setSearchTerm] = useState("");             // Texte saisi dans la barre de recherche
-  const [searchResults, setSearchResults] = useState(null);     // Résultats de l'API (ou null si pas de recherche)
-  const [apiLoading, setApiLoading] = useState(false);          // Indicateur de chargement API
-  const [apiError, setApiError] = useState(null);               // Erreur provenant de l'API
+  /* États de l'interface */
+  const [lang, setLang] = useState("fr");                           // Langue
+  const [selected1, setSelected1] = useState(null);                 // Cours slot 1
+  const [selected2, setSelected2] = useState(null);                 // Cours slot 2
+  const [openModal, setOpenModal] = useState(false);                // Modal sélection ouverte
+  const [currentTarget, setCurrentTarget] = useState(null);         // Slot cible (1 ou 2)
+  const [searchTerm, setSearchTerm] = useState("");                 // Terme de recherche
+  const [searchResults, setSearchResults] = useState(null);         // Résultats recherche
+  const [apiLoading, setApiLoading] = useState(false);              // Loading API
+  const [apiError, setApiError] = useState(null);                   // Erreur API
+  const [error, setError] = useState("");                           // Message erreur popup
+  const [showErrorPopup, setShowErrorPopup] = useState(false);      // Affichage popup erreur
+  const [currentPage, setCurrentPage] = useState(1);                // Page courante modal
+  const [searchFocus, setSearchFocus] = useState(false);            // Focus champ recherche
+  const [compareResult, setCompareResult] = useState(null);         // Résultat comparaison
+  const [compareLoading, setCompareLoading] = useState(false);      // Loading comparaison
 
-  // États UI supplémentaires
-  const [error, setError] = useState("");                       // Message d'erreur à afficher
-  const [showErrorPopup, setShowErrorPopup] = useState(false);  // Affichage du popup d'erreur temporisé
-  const [currentPage, setCurrentPage] = useState(1);            // Page actuelle dans la liste paginée
-  const [searchFocus, setSearchFocus] = useState(false);        // État du focus sur l'input de recherche (pour style)
-
-  // Références pour animations et timeout
+  /* Références DOM */
   const slot1Ref = useRef(null);
   const slot2Ref = useRef(null);
   const errorTimeoutRef = useRef(null);
 
-  // Chargement initial des cours depuis le cache
+  /* Traductions actives */
+  const t = txt[lang] || txt.fr;
+
+  /* Chargement de la langue depuis localStorage */
   useEffect(() => {
-    if (!courses) loadCourses().catch(err => console.error("Erreur chargement cours:", err));
+    const stored = window.localStorage.getItem(LANG_KEY);
+    if (stored === "fr" || stored === "en") {
+      setLang(stored);
+    }
   }, []);
 
-  // Nettoyage du timeout d'erreur à la destruction du composant
+  /* Chargement initial des cours */
+  useEffect(() => {
+    if (!courses) {
+      loadCourses().catch((err) =>
+        console.error("Erreur chargement cours:", err)
+      );
+    }
+  }, [courses, loadCourses]);
+
+  /* Nettoyage timeout erreur */
   useEffect(() => {
     return () => {
       if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
     };
   }, []);
 
-  // Réinitialisation de la pagination quand la recherche change
-  useEffect(() => setCurrentPage(1), [searchTerm, searchResults]);
-
-  // Réinitialisation des résultats quand la recherche est vidée
-  useEffect(() => {
-    if (!searchTerm.trim()) {
-      setSearchResults(null);
-      setApiError(null);
-      setApiLoading(false);
-    }
-  }, [searchTerm]);
-
-  // Vérifie si un sigle est complet (ex: ABC1234 → 8 caractères)
+  /* Vérifie si le sigle est complet pour recherche exacte */
   const isCompleteSigle = (sigle) => sigle.length >= MIN_SIGLE_LENGTH;
 
-  // Recherche exacte par sigle complet via l'API
+  /* Recherche par sigle exact */
   const searchBySigle = async (sigle) => {
     try {
       const data = await fetchCourseById(sigle);
       if (!data) {
         setSearchResults([]);
-        setApiError(`Aucun cours trouvé avec l'id "${sigle}"`);
+        setApiError(
+          lang === "fr"
+            ? `Aucun cours trouvé avec l'id "${sigle}"`
+            : `No courses found with id "${sigle}"`
+        );
       } else {
         setSearchResults([data]);
       }
     } catch (err) {
-      throw new Error(err?.message || "Erreur récupération cours par id");
+      throw err;
     }
   };
 
-  // Recherche par préfixe (ex: "IFT" → tous les cours commençant par IFT)
+  /* Recherche par préfixe */
   const searchByPrefix = async (prefix) => {
     try {
       const data = await fetchCoursesByPrefix(prefix);
       if (!Array.isArray(data) || data.length === 0) {
         setSearchResults([]);
-        setApiError(`Aucun cours trouvé commençant par "${prefix}"`);
+        setApiError(t.noCoursesFound(prefix));
       } else {
         setSearchResults(data);
       }
     } catch (err) {
-      throw new Error(err?.message || "Erreur recherche par préfixe");
+      throw err;
     }
   };
 
-  // Lancement de la recherche (sigle complet ou préfixe)
+  /* Gestionnaire de recherche */
   const handleSearch = async () => {
     const trimmed = searchTerm.trim().toUpperCase();
     if (!trimmed) {
       setSearchResults(null);
       setApiError(null);
+      setCurrentPage(1);
       return;
     }
 
     setApiLoading(true);
     setApiError(null);
     setSearchResults(null);
+    setCurrentPage(1);
 
     try {
-      if (isCompleteSigle(trimmed)) await searchBySigle(trimmed);
-      else await searchByPrefix(trimmed);
+      if (isCompleteSigle(trimmed)) {
+        await searchBySigle(trimmed);
+      } else {
+        await searchByPrefix(trimmed);
+      }
     } catch (err) {
-      setApiError(err.message || "Erreur lors de la recherche");
+      setApiError(
+        err.message ||
+          (lang === "fr" ? "Erreur lors de la recherche" : "Error during search")
+      );
       setSearchResults([]);
     } finally {
       setApiLoading(false);
     }
   };
 
-  // Recherche au pression de la touche Entrée
+  /* Gestionnaire touche Entrée */
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -120,27 +303,19 @@ export default function ComparerCoursView({ goHome }) {
     }
   };
 
-  // Liste de base : résultats API si recherche effectuée, sinon tous les cours du cache
-  const baseList = searchResults === null ? (courses || []) : searchResults;
-
-  // Filtrage local (quand pas de recherche API) par nom ou sigle
+  /* Liste des cours disponibles (recherche ou tous) */
+  const baseList = searchResults === null ? courses || [] : searchResults;
   const filteredCourses = useMemo(() => {
-    if (!baseList || !Array.isArray(baseList)) return [];
-    const term = searchTerm.trim().toLowerCase();
-    if (!term || searchResults !== null) return baseList;
-    return baseList.filter(c =>
-      (c.name || "").toLowerCase().includes(term) ||
-      (c.id || "").toLowerCase().includes(term)
-    );
-  }, [baseList, searchTerm, searchResults]);
+    return baseList || [];
+  }, [baseList]);
 
-  // Calcul de la pagination
+  /* Pagination */
   const totalPages = Math.max(1, Math.ceil(filteredCourses.length / ITEMS_PER_PAGE));
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentCourses = filteredCourses.slice(startIndex, endIndex);
 
-  // Affichage d'un message temporaire (utilisé pour les erreurs et le bouton Comparer)
+  /* Affichage popup erreur */
   const showMessage = (message, duration = 2500) => {
     setError(message);
     setShowErrorPopup(true);
@@ -148,7 +323,7 @@ export default function ComparerCoursView({ goHome }) {
     errorTimeoutRef.current = setTimeout(() => setShowErrorPopup(false), duration);
   };
 
-  // Animation "pulse" sur le slot lors de la sélection d'un cours
+  /* Animation pulse sur un slot */
   const animateSlot = (slotNumber) => {
     const ref = slotNumber === 1 ? slot1Ref : slot2Ref;
     if (ref.current) {
@@ -157,74 +332,101 @@ export default function ComparerCoursView({ goHome }) {
     }
   };
 
-  // Ouvre la modale pour choisir un cours dans un slot donné
+  /* Ouvre la modal de sélection pour un slot */
   const rechercherCours = (slot) => {
     setCurrentTarget(slot);
     setOpenModal(true);
     setSearchTerm("");
     setSearchResults(null);
     setApiError(null);
-    setApiLoading(false);
     setCurrentPage(1);
   };
 
-  // Sélectionne un cours dans le slot actif
+  /* Sélectionne un cours pour le slot cible */
   const choisirCours = (course) => {
     const otherSelected = currentTarget === 1 ? selected2 : selected1;
     if (otherSelected?.id === course.id) {
-      showMessage("Impossible de sélectionner le même cours pour les deux slots.");
+      showMessage(t.sameCoursError);
       return;
     }
     animateSlot(currentTarget);
-    currentTarget === 1 ? setSelected1(course) : setSelected2(course);
+    if (currentTarget === 1) {
+      setSelected1(course);
+    } else {
+      setSelected2(course);
+    }
     setOpenModal(false);
   };
 
-  // NOUVELLE FONCTION : clic sur Comparer
-  const comparerCoursA = () => {
+  /* Lance la comparaison des deux cours */
+  const comparerCoursA = async () => {
     if (!selected1 || !selected2) return;
-    showMessage("Indisponible pour le moment, on n’a pas encore les avis Discord ", 7000);
+
+    setCompareLoading(true);
+    setCompareResult(null);
+
+    try {
+      const [avis1, avis2] = await Promise.all([
+        fetchAvisByCourseId(selected1.id),
+        fetchAvisByCourseId(selected2.id),
+      ]);
+
+      const [stats1, stats2] = await Promise.all([
+        fetchCourseStats(selected1.id).catch(() => null),
+        fetchCourseStats(selected2.id).catch(() => null),
+      ]);
+
+      const sum1 = buildAvisSummary(avis1);
+      const sum2 = buildAvisSummary(avis2);
+
+      setCompareResult({
+        left: { course: selected1, avis: sum1, stats: stats1 },
+        right: { course: selected2, avis: sum2, stats: stats2 },
+      });
+    } catch (err) {
+      console.error("Erreur comparaison:", err);
+      showMessage(t.loadingError, 4000);
+    } finally {
+      setCompareLoading(false);
+    }
   };
 
-  // États dérivés pour le bouton Comparer et le chargement
+  /* États dérivés */
   const isCompareDisabled = !selected1 || !selected2 || selected1.id === selected2.id;
   const isLoading = loading || apiLoading;
   const hasError = Boolean(apiError);
 
-  // Rendu principal du composant
+  /* Rendu principal */
   return (
-    <div style={styles.container}>
-      <button onClick={goHome} style={styles.backButton}>
-        Retour à l'accueil
+    <div className="compare-container">
+      {/* Bouton retour */}
+      <button onClick={goHome} className="compare-back-button">
+        {t.backHome}
       </button>
 
-      {/* Affichage des deux slots de comparaison */}
+      {/* Slots de comparaison */}
       <Slots
         selected1={selected1}
         selected2={selected2}
         slot1Ref={slot1Ref}
         slot2Ref={slot2Ref}
         rechercherCours={rechercherCours}
+        t={t}
       />
 
-      {/* Bouton de comparaison */}
+      {/* Bouton Comparer */}
       <button
         onClick={comparerCoursA}
-        disabled={isCompareDisabled}
-        style={{
-          ...styles.compareButton,
-          cursor: isCompareDisabled ? "not-allowed" : "pointer",
-          backgroundColor: isCompareDisabled ? "#a0afc4ff" : "#5973c7ff",
-          opacity: isCompareDisabled ? 0.6 : 1
-        }}
+        disabled={isCompareDisabled || compareLoading}
+        className={`compare-button ${isCompareDisabled || compareLoading ? "disabled" : ""}`}
       >
-        Comparer
+        {compareLoading ? t.comparing : t.compare}
       </button>
 
-      {/* Popup de message (erreur ou indisponibilité) */}
-      {showErrorPopup && <div style={styles.errorPopup}>{error}</div>}
+      {/* Popup d'erreur */}
+      {showErrorPopup && <div className="compare-error-popup">{error}</div>}
 
-      {/* Modale de sélection de cours */}
+      {/* Modal de sélection de cours */}
       {openModal && (
         <CourseSelectorModal
           searchTerm={searchTerm}
@@ -242,190 +444,183 @@ export default function ComparerCoursView({ goHome }) {
           closeModal={() => setOpenModal(false)}
           searchFocus={searchFocus}
           setSearchFocus={setSearchFocus}
+          t={t}
         />
       )}
 
-      {/* Animations CSS */}
-      <style>{`
-        .pulse { transform: scale(1.1); transition: transform 0.3s; }
-        @keyframes fadeInOut {
-          0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-          10% { opacity: 1; transform: translateX(-50%) translateY(0); }
-          90% { opacity: 1; transform: translateX(-50%) translateY(0); }
-          100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-        }
-      `}</style>
+      {/* Modal de résultat de comparaison */}
+      {compareResult && (
+        <ComparisonModal
+          left={compareResult.left}
+          right={compareResult.right}
+          onClose={() => setCompareResult(null)}
+          t={t}
+        />
+      )}
     </div>
   );
 }
 
-// Composant : Affichage des deux slots (gauche/droite) avec le VS au milieu
-function Slots({ selected1, selected2, slot1Ref, slot2Ref, rechercherCours }) {
+/* Composant Slots de comparaison */
+function Slots({ selected1, selected2, slot1Ref, slot2Ref, rechercherCours, t }) {
   const renderSlot = (selected, ref, slotNumber) => (
     <div
       ref={ref}
       onClick={() => rechercherCours(slotNumber)}
-      style={{
-        ...styles.slot,
-        background: selected ? "linear-gradient(135deg, #edeff7ff, #c7d2fe)" : "#e0e7ff",
-        boxShadow: selected ? "0 8px 20px rgba(99,102,241,0.4)" : "0 4px 12px rgba(0,0,0,0.08)",
-        color: selected ? "#1f2937" : "#9ca3af",
-        transform: selected ? "scale(1.03)" : "scale(1)"
-      }}
+      className={`compare-slot ${selected ? "filled" : "empty"}`}
     >
       {selected ? (
         <>
-          <strong style={styles.courseCardTitle}>{selected.name}</strong>
-          <small style={{ ...styles.courseId, marginBottom: "8px" }}>{selected.id}</small>
-          <p style={styles.courseDescription}>{selected.description}</p>
-          <div><strong>Crédits:</strong> {selected.credits}</div>
-          <div><strong>Horaires:</strong> {selected.schedules?.map(s => `${s.day} ${s.start}-${s.end}`).join(", ") || "Non spécifié"}</div>
-          <div><strong>Session:</strong> {selected.available_terms ? Object.entries(selected.available_terms).filter(([k,v])=>v).map(([k])=>k.charAt(0).toUpperCase() + k.slice(1)).join(", ") : "Non spécifié"}</div>
-          <div><strong>Préalable:</strong> {selected.requirement_text || "Aucun"}</div>
+          <strong className="compare-course-title">{selected.name}</strong>
+          <small className="compare-course-id">{selected.id}</small>
+          <p className="compare-course-description">{selected.description}</p>
+          <div><strong>{t.credits}:</strong> {selected.credits}</div>
+          <div><strong>{t.schedule}:</strong> {formatSchedules(selected.schedules, t)}</div>
+          <div><strong>{t.session}:</strong> {formatTerms(selected.available_terms, t)}</div>
+          <div><strong>{t.prerequisite}:</strong> {cleanPrerequisite(selected.requirement_text, t)}</div>
         </>
       ) : (
-        <span style={styles.placeholder}>Cliquer pour choisir cours {slotNumber}</span>
+        <span className="compare-slot-placeholder">{t.selectCourse} {slotNumber}</span>
       )}
     </div>
   );
 
   return (
-    <div style={styles.slotsContainer}>
+    <div className="compare-slots-container">
       {renderSlot(selected1, slot1Ref, 1)}
-      <div style={styles.vs}>VS</div>
+      <div className="compare-vs">VS</div>
       {renderSlot(selected2, slot2Ref, 2)}
     </div>
   );
 }
 
-// Composant : Modale de sélection d'un cours
+/* Composant Modal de sélection de cours */
 function CourseSelectorModal({
-  searchTerm,
-  setSearchTerm,
-  handleSearch,
-  handleKeyDown,
-  filteredCourses,
-  isLoading,
-  hasError,
-  apiError,
-  currentPage,
-  setCurrentPage,
-  totalPages,
-  choisirCours,
-  closeModal,
-  searchFocus,
-  setSearchFocus
+  searchTerm, setSearchTerm, handleSearch, handleKeyDown, filteredCourses,
+  isLoading, hasError, apiError, currentPage, setCurrentPage, totalPages,
+  choisirCours, closeModal, searchFocus, setSearchFocus, t,
 }) {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentCourses = filteredCourses.slice(startIndex, endIndex);
 
   return (
-    <div style={styles.modalOverlay}>
-      <div style={styles.modalContent}>
-        <h3 style={styles.modalTitle}>Choisir un cours</h3>
+    <div className="compare-modal-overlay" onClick={closeModal}>
+      <div className="compare-modal-content" onClick={(e) => e.stopPropagation()}>
+        <h3 className="compare-modal-title">{t.chooseCourse}</h3>
 
         {/* Barre de recherche */}
-        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+        <div className="compare-search-row">
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Ex: IFT, MAT2255"
+            placeholder={`${t.ex}: IFT2255 ou IFT ou 2255`}
             autoFocus
             onFocus={() => setSearchFocus(true)}
             onBlur={() => setSearchFocus(false)}
             onKeyDown={handleKeyDown}
-            style={{
-              ...styles.searchInput,
-              border: searchFocus ? "2px solid #ffffff" : "1px solid #ffffffff",
-              outline: "none",
-              transition: "all 0.2s ease"
-            }}
+            className={`compare-search-input ${searchFocus ? "focused" : ""}`}
           />
           <button
             onClick={handleSearch}
             disabled={isLoading || !searchTerm.trim()}
-            style={{
-              padding: "8px 12px",
-              borderRadius: "6px",
-              border: "none",
-              cursor: isLoading ? "not-allowed" : "pointer",
-              backgroundColor: "#1e3a8a",
-              color: "white",
-              fontWeight: 600
-            }}
+            className="compare-search-button"
           >
-            Rechercher
+            {t.search}
           </button>
         </div>
 
-        {/* États de chargement / erreur / vide */}
-        {isLoading && <p>Chargement des cours...</p>}
-        {hasError && apiError && <p style={{ color: "red" }}>{apiError}</p>}
-        {!isLoading && !hasError && filteredCourses.length === 0 && <p>Aucun cours trouvé pour "{searchTerm}"</p>}
+        {/* États chargement/erreur */}
+        {isLoading && <p>{t.loading}</p>}
+        {hasError && apiError && <p className="compare-error-text">{apiError}</p>}
+        {!isLoading && !hasError && filteredCourses.length === 0 && searchTerm && (
+          <p>{t.noCoursesFound(searchTerm)}</p>
+        )}
 
-        {/* Liste paginée des cours */}
+        {/* Grille des cours */}
         {!isLoading && filteredCourses.length > 0 && (
           <>
-            <div style={styles.pagination}>
-              <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} style={styles.pageButton}>Précédent</button>
-              <span style={styles.pageInfo}>Page {currentPage} sur {totalPages}</span>
-              <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} style={styles.pageButton}>Suivant</button>
+            {/* Pagination */}
+            <div className="compare-pagination">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="compare-page-button"
+              >
+                {t.previous}
+              </button>
+              <span className="compare-page-info">
+                {t.page} {currentPage} {t.of} {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="compare-page-button"
+              >
+                {t.next}
+              </button>
             </div>
 
-            <div style={styles.coursesGrid}>
-              {currentCourses.map(course => (
-                <div key={course.id} onClick={() => choisirCours(course)} style={styles.courseCard}>
-                  <strong style={styles.courseCardTitle}>{course.name}</strong>
-                  <p style={styles.courseId}>{course.id}</p>
-                  <p style={styles.courseDescription}>{course.description}</p>
+            {/* Cartes de cours */}
+            <div className="compare-courses-grid">
+              {currentCourses.map((course) => (
+                <div
+                  key={course.id}
+                  className="compare-course-card2"
+                  onClick={() => choisirCours(course)}
+                >
+                  <strong className="compare-course2-title">{course.id}</strong>
+                  <p className="compare-course2-name">{course.name}</p>
                 </div>
               ))}
             </div>
           </>
         )}
 
-        <button onClick={closeModal} style={styles.closeButton}>Fermer</button>
+        {/* Bouton fermer */}
+        <button onClick={closeModal} className="compare-close-button">
+          {t.close}
+        </button>
       </div>
     </div>
   );
 }
 
-// Tous les styles du composant (inline pour simplicité)
-const styles = {
-  container: { width: "100vw", height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", backgroundColor: "#f0f2f5", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" },
-  backButton: { position: "fixed", top: "20px", left: "20px", padding: "10px 18px", borderRadius: "6px", cursor: "pointer", backgroundColor: "#1e3a8a", color: "white", border: "none", fontWeight: "600", zIndex: 1000 },
-  slotsContainer: { display: "flex", alignItems: "center", gap: "20px", marginBottom: "15px" },
-  slot: { width: "300px", height: "450px", borderRadius: "16px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start", cursor: "pointer", transition: "all 0.3s ease", textAlign: "center", padding: "15px", color: "#1f2937" },
-  vs: { fontSize: "80px", fontWeight: "700", color: "#1e3a8a", margin: "0 10px", userSelect: "none" },
-  courseCardTitle: { fontSize: "16px", fontWeight: "600", marginBottom: "6px", color: "#1e3a8a" },
-  courseDescription: { fontSize: "14px", overflowY: "auto", color: "#374151", flex: "1", display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "10px 0" },
-  courseId: { fontSize: "13px", color: "#070707ff" },
-  placeholder: { fontSize: "14px", color: "#6b7280", transition: "all 0.3s" },
-  compareButton: { padding: "12px 30px", fontSize: "16px", borderRadius: "8px", color: "white", border: "none", marginBottom: "20px" },
-  errorPopup: { position: "fixed", top: "20%", left: "50%", transform: "translateX(-50%)", backgroundColor: "#6366f1", color: "white", padding: "15px 30px", borderRadius: "12px", boxShadow: "0 4px 20px rgba(0,0,0,0.3)", zIndex: 500, fontWeight: "bold", fontSize: "16px", textAlign: "center", animation: "fadeInOut 4s forwards", maxWidth: "90%" },
-  modalOverlay: { position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 300 },
-  modalContent: { background: "#e6e6fa", width: "80%", maxWidth: "1200px", maxHeight: "80%", padding: "20px", borderRadius: "12px", display: "flex", flexDirection: "column", overflow: "hidden" },
-  modalTitle: { marginBottom: "10px" },
-  searchInput: { width: "100%", padding: "10px", margin: "10px 0", fontSize: "16px", boxSizing: "border-box", borderRadius: "6px" },
-  pagination: { display: "flex", justifyContent: "center", alignItems: "center", gap: "15px", padding: "10px 0" },
-  pageButton: { padding: "6px 12px", borderRadius: "4px", border: "1px solid #a38181ff", backgroundColor: "white", cursor: "pointer", fontSize: "13px" },
-  pageInfo: { fontSize: "13px", fontWeight: "500" },
-  coursesGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: "15px", overflowY: "auto", flex: 1, padding: "10px 0" },
-  courseCard: {
-    border: "2px solid #ffffffff",
-    borderRadius: "12px",
-    padding: "12px",
-    cursor: "pointer",
-    backgroundColor: "#fcfcfcff",
-    boxShadow: "2px 2px 10px rgba(0,0,0,0.12)",
-    transition: "transform 0.2s",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    height: "280px",
-    boxSizing: "border-box"
-  },
-  closeButton: { marginTop: "15px", padding: "8px 15px", borderRadius: "6px", cursor: "pointer", alignSelf: "flex-end", backgroundColor: "#f4f4f8ff", color: "#374151", border: "none" }
-};
+/* Composant Modal de résultat de comparaison */
+function ComparisonModal({ left, right, onClose, t }) {
+  const { course: c1, avis: a1, stats: s1 } = left;
+  const { course: c2, avis: a2, stats: s2 } = right;
+
+  const fmt = (x) => (x == null ? "—" : x);
+
+  return (
+    <div className="compare-result-overlay" onClick={onClose}>
+      <div className="compare-result" onClick={(e) => e.stopPropagation()}>
+        <h3>
+          <span>{t.comparisonResult}</span>
+          <button onClick={onClose} className="compare-result-close">✕</button>
+        </h3>
+        <table className="compare-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>{c1.id} — {c1.name}</th>
+              <th>{c2.id} — {c2.name}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>{t.academicAverage}</td><td>{s1 ? fmt(s1.moyenne) : "—"}</td><td>{s2 ? fmt(s2.moyenne) : "—"}</td></tr>
+            <tr><td>{t.successScore}</td><td>{s1 ? fmt(s1.score) : "—"}</td><td>{s2 ? fmt(s2.score) : "—"}</td></tr>
+            <tr><td>{t.participants}</td><td>{s1 ? fmt(s1.participants) : "—"}</td><td>{s2 ? fmt(s2.participants) : "—"}</td></tr>
+            <tr>
+              <td>{t.difficulty}</td>
+              <td>{s1 ? getDifficultyFromMoyenne(s1.moyenne, t) : "—"}</td>
+              <td>{s2 ? getDifficultyFromMoyenne(s2.moyenne, t) : "—"}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}

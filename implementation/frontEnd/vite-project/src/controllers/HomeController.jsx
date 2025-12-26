@@ -1,214 +1,131 @@
-import React, { useState } from "react";
+// src/controllers/HomeController.jsx
+import React, { useState, useEffect } from "react";
 import ConsulterListeView from "../views/ConsulterListeView.jsx";
 import ComparerCoursView from "../views/ComparerCoursView.jsx";
+import AvisListeView from "../views/AvisListeView.jsx";
+import ProfilView from "../views/ProfilView.jsx";
 import { useCoursesCache } from "../controllers/CoursesCache.jsx";
+import "../styles/HomeController.css";
 
-// Fonction principale
+/* Clé localStorage pour la langue utilisateur */
+const LANG_KEY = "ift2255_langue";
 
+/* Composant principal de navigation et routage */
 export default function HomeController() {
-    const [activeTab, setActiveTab] = useState("accueil");
-    const { selectedProgram } = useCoursesCache();
+  /* États locaux du contrôleur */
+  const [activeTab, setActiveTab] = useState("accueil");            // Onglet actif
+  const [lang, setLang] = useState("fr");                           // Langue actuelle
 
-    // Navigation entre les onglets
+  /* Accès au cache des cours (optionnel, pour détecter le chargement) */
+  const { courses } = useCoursesCache?.() || {};
 
-    const consulterListeCours = () => {
-        setActiveTab("liste");
-    };
-
-    const comparerCours = () => {
-        setActiveTab("comparer");
-    };
-
-    const retourAccueil = () => {
-        setActiveTab("accueil");
-    };
-
-    // Rendu conditionnel des onglets
-    const renderTab = () => {
-        switch (activeTab) {
-            case "liste":
-                return <ConsulterListeView goHome={retourAccueil} />;
-            case "comparer":
-                return <ComparerCoursView goHome={retourAccueil} />;
-            case "accueil":
-            default:
-                return (
-                    <AccueilView 
-                        selectedProgram={selectedProgram}
-                        consulterListeCours={consulterListeCours}
-                        comparerCours={comparerCours}
-                    />
-                );
-        }
-    };
-
-    return (
-        <div style={{ width: "100%", minHeight: "100vh" }}>
-            {renderTab()}
-        </div>
-    );
-}
-
-// Vue Accueil
-function AccueilView({ selectedProgram, consulterListeCours, comparerCours }) {
-    return (
-        <div style={styles.container}>
-            <div style={styles.hero}>
-                <HeroContent 
-                    selectedProgram={selectedProgram}
-                    consulterListeCours={consulterListeCours}
-                    comparerCours={comparerCours}
-                />
-                <HeroIllustration />
-            </div>
-
-            <InfoSection />
-        </div>
-    );
-}
-
-function HeroContent({ selectedProgram, consulterListeCours, comparerCours }) {
-    return (
-        <div style={styles.heroContent}>
-            <h1 style={styles.title}>
-                Planifiez votre parcours académique
-            </h1>
-            <p style={styles.subtitle}>
-                Explorez, comparez et organisez vos cours facilement et efficacement.
-            </p>
-
-            {selectedProgram && (
-                <div style={styles.programBadge}>
-                    Programme sélectionné : <strong>{selectedProgram.name}</strong>
-                </div>
-            )}
-
-            <div style={styles.buttonsContainer}>
-                <button
-                    style={{ ...styles.button, backgroundColor: "#1e3a8a" }}
-                    onClick={consulterListeCours}
-                >
-                    Consulter les cours
-                </button>
-                <button
-                    style={{ ...styles.button, backgroundColor: "#2563eb" }}
-                    onClick={comparerCours}
-                >
-                    Comparer les cours
-                </button>
-            </div>
-        </div>
-    );
-}
-
-function HeroIllustration() {
-    return (
-        <div style={styles.heroIllustration}>
-            {/* Espace pour illustration future */}
-        </div>
-    );
-}
-
-function InfoSection() {
-    return (
-        <div style={styles.infoSection}>
-            <p style={styles.infoText}>
-                Gérez vos cours, comparez les prérequis et planifiez vos sessions en toute simplicité. 
-                Tout est intégré pour vous donner une expérience fluide.
-            </p>
-        </div>
-    );
-}
-
-// Styles
-const styles = {
-    container: {
-        width: "100vw",
-        minHeight: "100vh",
-        backgroundColor: "#f8fafc",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "'Inter', sans-serif",
-        color: "#1f2937",
-        overflow: "hidden"
-    },
-    hero: {
-        width: "90%",
-        maxWidth: "1400px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "60px 40px",
-        boxSizing: "border-box",
-        flexWrap: "wrap",
-        background: "linear-gradient(90deg, #e0e7ff, #f3f4f6)",
-        borderRadius: "20px",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-        flex: 1
-    },
-    heroContent: {
-        flex: 1,
-        minWidth: "300px",
-        marginBottom: "20px"
-    },
-    title: {
-        fontSize: "3rem",
-        fontWeight: "bold",
-        lineHeight: "1.2",
-        marginBottom: "20px"
-    },
-    subtitle: {
-        fontSize: "1.2rem",
-        marginBottom: "30px",
-        color: "#374151"
-    },
-    programBadge: {
-        marginBottom: "30px",
-        padding: "12px 24px",
-        backgroundColor: "#e0f2fe",
-        color: "#1e40af",
-        fontWeight: "600",
-        borderRadius: "12px",
-        display: "inline-block"
-    },
-    buttonsContainer: {
-        display: "flex",
-        gap: "20px",
-        flexWrap: "wrap"
-    },
-    button: {
-        padding: "12px 28px",
-        fontSize: "16px",
-        fontWeight: "600",
-        color: "white",
-        border: "none",
-        borderRadius: "12px",
-        cursor: "pointer",
-        transition: "transform 0.2s, box-shadow 0.2s"
-    },
-    heroIllustration: {
-        flex: 1,
-        minWidth: "300px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: "20px"
-    },
-    illustration: {
-        maxWidth: "100%",
-        borderRadius: "20px",
-        boxShadow: "0 8px 25px rgba(0,0,0,0.15)"
-    },
-    infoSection: {
-        maxWidth: "900px",
-        textAlign: "center",
-        padding: "20px 40px"
-    },
-    infoText: {
-        fontSize: "1rem",
-        color: "#4b5563",
-        lineHeight: "1.6"
+  /* Chargement initial de la langue depuis localStorage */
+  useEffect(() => {
+    const stored = window.localStorage.getItem(LANG_KEY);
+    if (stored === "fr" || stored === "en") {
+      setLang(stored);
     }
-};
+  }, []);
+
+  /* Écoute des changements de langue depuis ProfilView */
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      console.log("Language changed in HomeController");
+      const storedLang = window.localStorage.getItem(LANG_KEY);
+      if (storedLang === "fr" || storedLang === "en") {
+        setLang(storedLang);
+      }
+    };
+
+    window.addEventListener("languageChanged", handleLanguageChange);
+    return () => window.removeEventListener("languageChanged", handleLanguageChange);
+  }, []);
+
+  /* Fonctions de navigation entre les onglets */
+  const goHome = () => setActiveTab("accueil");
+  const goListe = () => setActiveTab("liste");
+  const goComparer = () => setActiveTab("comparer");
+  const goAvis = () => setActiveTab("avis");
+  const goProfil = () => setActiveTab("profil");
+
+  /* Objets de traduction i18n pour l'accueil */
+  const t = {
+    fr: {
+      title: "Planificateur de cours",
+      intro: "Explorez, comparez et organisez vos cours facilement et efficacement.",
+      btnListe: "Consulter la liste des cours",
+      btnComparer: "Comparer des cours",
+      btnAvis: "Voir les avis",
+      btnProfil: "Profil",
+    },
+    en: {
+      title: "Course planner",
+      intro: "Explore, compare, and organize your courses easily and efficiently.",
+      btnListe: "Browse course list",
+      btnComparer: "Compare courses",
+      btnAvis: "See reviews",
+      btnProfil: "Profile",
+    },
+  }[lang] || {
+    title: "Planificateur de cours",
+    intro: "Explorez, comparez et organisez vos cours facilement et efficacement.",
+    btnListe: "Consulter la liste des cours",
+    btnComparer: "Comparer des cours",
+    btnAvis: "Voir les avis",
+    btnProfil: "Profil",
+  };
+
+  /* Fonction de rendu conditionnel des onglets */
+  const renderTab = () => {
+    switch (activeTab) {
+      /* Onglet liste des cours */
+      case "liste":
+        return <ConsulterListeView goHome={goHome} />;
+      
+      /* Onglet comparateur de cours */
+      case "comparer":
+        return <ComparerCoursView goHome={goHome} />;
+      
+      /* Onglet avis par cours */
+      case "avis":
+        return <AvisListeView goHome={goHome} />;
+      
+      /* Onglet profil et préférences */
+      case "profil":
+        return <ProfilView goHome={goHome} />;
+      
+      /* Onglet d'accueil par défaut */
+      case "accueil":
+      default:
+        return (
+          <div className="home-view">
+            {/* Titre principal */}
+            <h1>{t.title}</h1>
+            
+            {/* Introduction dynamique */}
+            <p className="home-intro">
+              {t.intro}
+              {courses && courses.length > 0 && (
+                <> Gérez vos cours, comparez les prérequis et planifiez vos sessions en toute simplicité.</>
+              )}
+            </p>
+
+            {/* Boutons d'action principaux */}
+            <div className="home-actions">
+              <button onClick={goListe}>{t.btnListe}</button>
+              <button onClick={goComparer}>{t.btnComparer}</button>
+              <button onClick={goAvis}>{t.btnAvis}</button>
+              <button onClick={goProfil}>{t.btnProfil}</button>
+            </div>
+          </div>
+        );
+    }
+  };
+
+  /* Rendu principal */
+  return (
+    <div className="app-container">
+      {renderTab()}
+    </div>
+  );
+}

@@ -1,0 +1,183 @@
+/* Conteneur principal de l'application */
+.app-container {
+  width: 100%;
+  height: 98vh;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1f2937;
+  overflow: hidden;
+}
+
+/* Vue principale de la page d'accueil */
+.home-view {
+  width: 100%;
+  max-width: 1400px;
+  min-height: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 40px;
+  box-sizing: border-box;
+  background: linear-gradient(90deg, #e0e7ff, #f3f4f6);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Titre principal */
+.home-view h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+/* Texte d'introduction */
+.home-intro {
+  font-size: 1.2rem;
+  margin-bottom: 32px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* Badge du programme */
+.program-badge {
+  margin-bottom: 30px;
+  padding: 12px 24px;
+  background-color: #e0f2fe;
+  color: #1e40af;
+  font-weight: 600;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* Conteneur des boutons d'action */
+.home-actions {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Boutons d'action principaux */
+.home-actions button {
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Effet de brillance sur les boutons */
+.home-actions button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.home-actions button:hover::before {
+  left: 100%;
+}
+
+.home-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.home-actions button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.4);
+}
+
+.home-actions button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.5);
+}
+
+/* Section d'information supplémentaire */
+.info-section {
+  max-width: 900px;
+  text-align: center;
+  padding: 20px 40px;
+}
+
+.info-text {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* Styles responsive pour tablettes */
+@media (max-width: 768px) {
+  .home-view {
+    padding: 40px 20px;
+  }
+
+  .home-view h1 {
+    font-size: 2rem;
+  }
+
+  .home-intro {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .home-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .home-actions button {
+    width: 100%;
+    padding: 14px 20px;
+  }
+}
+
+/* Styles responsive pour mobiles */
+@media (max-width: 480px) {
+  .home-view {
+    padding: 30px 15px;
+  }
+
+  .home-view h1 {
+    font-size: 1.75rem;
+  }
+
+  .home-intro {
+    font-size: 0.95rem;
+  }
+
+  .program-badge {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+}

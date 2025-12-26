@@ -1,0 +1,174 @@
+/* Carte de cours pour la comparaison */
+.compare-course-card2 {
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Effet de bordure animée au hover */
+.compare-course-card2::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 2px;
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.compare-course-card2:hover::before {
+  opacity: 1;
+}
+
+/* Effet hover de la carte sans changement de background */
+.compare-course-card2:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.2);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+}
+
+/* Animation d'entrée des cartes */
+.compare-course-card2 {
+  animation: card-fade-in 0.3s ease-out backwards;
+}
+
+@keyframes card-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Délais d'animation progressifs pour chaque carte */
+.compare-course-card2:nth-child(1) { animation-delay: 0.05s; }
+.compare-course-card2:nth-child(2) { animation-delay: 0.1s; }
+.compare-course-card2:nth-child(3) { animation-delay: 0.15s; }
+.compare-course-card2:nth-child(4) { animation-delay: 0.2s; }
+.compare-course-card2:nth-child(5) { animation-delay: 0.25s; }
+
+/* Titre du cours avec gradient */
+.compare-course2-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, #1e293b, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all 0.3s ease;
+}
+
+.compare-course-card2:hover .compare-course2-title {
+  transform: translateX(2px);
+}
+
+/* ID du cours avec badge */
+.compare-course2-id {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 8px;
+  font-weight: 600;
+  display: inline-block;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  padding: 3px 10px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.compare-course-card2:hover .compare-course2-id {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* Nom du cours */
+.compare-course2-name {
+  margin: 0 0 10px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.5;
+  max-height: 65px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+/* Description du cours */
+.compare-course2-description {
+  margin: 0 0 10px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.5;
+  max-height: 65px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+/* Informations supplémentaires */
+.compare-course-card2 > div {
+  margin-bottom: 4px;
+  color: #64748b;
+  font-size: 12px;
+  transition: color 0.2s ease;
+}
+
+.compare-course-card2:hover > div {
+  color: #475569;
+}
+
+.compare-course-card2 > div strong {
+  color: #1e293b;
+  font-weight: 700;
+}
+
+/* Effet de brillance au survol */
+.compare-course-card2::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: rotate(45deg);
+  transition: all 0.6s ease;
+  opacity: 0;
+}
+
+.compare-course-card2:hover::after {
+  left: 100%;
+  opacity: 1;
+}
+
+/* Styles responsive pour tablettes et mobiles */
+@media (max-width: 768px) {
+  .compare-course-card2 {
+    padding: 14px;
+  }
+  .compare-course2-title {
+    font-size: 14px;
+  }
+  .compare-course2-description {
+    max-height: 60px;
+  }
+}

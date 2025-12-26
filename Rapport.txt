@@ -1,0 +1,107 @@
+Lien Github
+
+https://github.com/yeah1224-yh/G4.git
+
+Vous trouverez la structure et les dépendences à installer dans chaque dossier de l'implementation contenant leur propre README.md
+
+
+## Briève description du projet
+
+La platforme consiste à aider les étudiants(es) a faire leurs choix de cours en fonction des données academiques et l'avis des étudiants qui ont dejà suivis le cours.
+
+
+## Fonctionnalités
+
+4 grandes fonctionnalités
+
+- Consulter la liste des cours
+
+Elle affiche la liste des cours disponible dans l'Api planifium par departement et permet la recherche des ou d'un cours par plusieurs manière 
+( exple: ift1227 pour le cours, ift pour les cours dont leurs code commence par ift, 1227 pour les cours qui on 1227 dans leur code ).
+
+- Profil 
+
+Permet de selectionner ses preferences, 2 options disponibles, soit choisir le programme ( dont 3 disponibles pour le moment, Informatique, mathématique et physique )
+puis la langue ( 2 disponibles Anglais et Français ).
+
+- Comparer les cours
+
+Elle permet la comparaison entre 2 cours en fonction des données statistiques de l'université, les statistiques de tous les cours ne sont pas disponible.
+
+- Avis
+
+Elle affiche les avis sur chaque cours données par les étudiants qui ont dejà suivis le cours 
+
+
+## Tests
+
+1. Minimum de tests unitaires
+
+Dans ce projet, 11 tests unitaires JUnit ont été développés afin de couvrir au moins 5 cas de tests distincts pour 6 fonctionnalités choisies, conformément aux exigences du mandat illustré dans la consigne fournie. Les tests se concentrent exclusivement sur de la logique métier ou de contrôleur, sans inclure de simples accesseurs.​
+Les fonctionnalités testées sont les suivantes : gestion des avis de cours, gestion des utilisateurs, calcul des statistiques de cours, recherche de cours, gestion des préférences/profil, et consultation des statistiques via le contrôleur REST. Chaque fonctionnalité est validée par au moins un test significatif, ce qui assure une couverture minimale cohérente avec les attentes du projet.
+​
+2. Méthodes explicitement exclues
+Les tests portent uniquement sur des méthodes présentant une logique applicative (filtrage, validation, appel aux services, formatage de la réponse), ce qui respecte explicitement la consigne fournie.​
+
+3. Utilisation de Mockito 
+Les dépendances suivantes sont simulées afin d’isoler la logique à tester :​
+
+- Dans les tests du contrôleur des cours (CourseControllerTest), les services CourseService, AvisService et StatsCoursService sont mockés pour contrôler les scénarios « stats trouvées » et « aucune stat ».
+
+- L’objet Context de Javalin est également mocké pour vérifier les appels à status(...) et json(...) sans lancer de serveur HTTP ni dépendre d’un environnement externe.
+
+- Cette approche permet de tester précisément le comportement attendu du contrôleur lorsque les services retournent des résultats différents, tout en respectant la recommandation d’utiliser une librairie de mock pour les méthodes avec dépendances.​
+
+4. Oracle de tests (vue synthétique)
+
+Pour chaque cas de test retenu, un oracle de tests est défini : pour un jeu d’arguments donné, on précise le résultat attendu ainsi que les effets de bord attendus. Ci‑dessous, un exemple représentatif par fonctionnalité principale :​
+
+   - Avis de cours : pour un identifiant de cours existant, la méthode doit retourner la liste d’avis correspondante, sans effet de bord observable sur l’état global.
+
+   - Utilisateurs :
+
+        Pour un identifiant existant, le service doit retourner un utilisateur présent avec les attributs attendus.
+
+        Pour un identifiant inexistant, la méthode doit retourner un Optional vide, ce qui traduit l’absence d’utilisateur correspondant.
+
+   - Statistiques de cours (service) :
+
+        Si des données existent pour le cours, le service doit calculer et retourner une structure de statistiques cohérente.
+
+        En absence de données, l’absence de statistiques doit être signalée (par une valeur nulle ou équivalente) et exploitée ensuite par le contrôleur.
+
+   - Recherche de cours : pour un ensemble de paramètres de recherche donnés (sigle, nom), la méthode doit retourner uniquement les cours satisfaisant ces critères, sans modifier de données persistées.
+
+   - Préférences / profil : pour un profil utilisateur donné, le service doit fournir des préférences cohérentes (par exemple recommandations ou paramètres associés), sans effets secondaires inattendus.
+
+   - Statistiques via contrôleur REST :
+
+        Si le service retourne des statistiques pour un identifiant de cours valide, le contrôleur doit répondre avec un JSON de statistiques et un code HTTP de succès implicite.
+
+        Si aucune statistique n’est disponible, le contrôleur doit renvoyer un code HTTP 404, indiquant clairement l’absence de ressources pour ce cours.
+
+Cette définition d’oracle assure que chaque test documente explicitement ses entrées, la sortie attendue et les effets de bord éventuels, en accord avec la consigne « Oracle de tests » de l’énoncé.
+
+
+## Ressources utiliser
+
+- Intelligence artificiel ( plus sur la comprehension des codes fournis, l'aide a la correction syntaxique de React puisque c'était notre première fois de l'utiliser,
+l'aide a produire des styles css pour les pages, surtout pour la rendre dynamique et les commentaires finaux aussi ).
+
+- Video Youtube
+
+https://www.youtube.com/watch?v=hn80mWvP-9g&list=PLZPZq0r_RZOMQArzyI32mVndGBZ3D99XQ ( Comprendre la structure de comment react fonctionne )
+https://www.youtube.com/watch?v=00lxm_doFYw et  https://www.youtube.com/watch?v=qdCHEUaFhBk et https://www.youtube.com/watch?v=o5qsUz2vnzg  ( pour les fetch )
+https://www.youtube.com/watch?v=TtPXvEcE11E ( cette vidéo nous a beaucoup aider aussi )
+
+- Documentation 
+
+https://react.dev/learn ( Pour react )
+
+https://javalin.io/documentation#getting-started ( Pour javalin )
+
+
+## Ce qui n'a pas marcher
+
+- On a eu des problèmes a afficher les horaires pour les cours
+- Il se peut que vous verrez des logs dans le code ( On a beaucoup utiliser les logs pour nous débloquer dans plusieurs situation, surtout sur les requetes )
