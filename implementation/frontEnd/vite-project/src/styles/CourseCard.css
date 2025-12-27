@@ -10,7 +10,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 450px; /* Prend toute la hauteur de la cellule grid */
+  height: 480px; /* Prend toute la hauteur de la cellule grid */
 }
 
 .course-card::before {
