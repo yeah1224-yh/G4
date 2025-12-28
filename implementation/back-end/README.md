@@ -1,7 +1,7 @@
 ## Structure complet de l'API Backend
 
 ```sh
-back-end/
+ift2255-template-javalin/
 ├── rest-api/
 │   ├── src/
 │   │   ├── main/
@@ -70,6 +70,8 @@ back-end/
 ​- Tests (src/test/java/...) : Tests unitaires des services et de la logique métier (ex. UserServiceTest, CourseServiceTest, etc.).
 
 - Main.java : Point d’entrée de l’application qui initialise le serveur Javalin, applique la configuration et enregistre les routes.
+
+- avis.db ( SQLite ) : Base de donnée qui contient la liste des données agréer pour les statistiques, et contient aussi les avis des étudiants
 
 
 ## Installation des dépendences et lancement

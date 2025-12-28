@@ -5,44 +5,52 @@ import {
   fetchCourseById,
   fetchCoursesByPrefix,
   fetchAvisByCourseId,
+  postAvis,
 } from "../api/coursesApi.js";
 import "../styles/AvisListe.css";
 
-/* Constantes de configuration */
-const ITEMS_PER_PAGE = 50;           // Nombre de cours par page
-const MIN_SIGLE_LENGTH = 6;          // Longueur minimale pour recherche exacte
-const LANG_KEY = "ift2255_langue";   // Clé localStorage pour la langue
-
-// Clés de stockage localStorage
+const ITEMS_PER_PAGE = 50;
+const MIN_SIGLE_LENGTH = 6;
+const LANG_KEY = "ift2255_langue";
 const CLIENT_ID_KEY = "ift2255_client_id";
 const PSEUDO_MAP_KEY = "ift2255_pseudo_map";
 
-// Liste des 20 pseudos disponibles pour l'anonymisation
 const NICKNAMES = [
   "Mamadou", "Alice", "Samir", "Julie", "Karim", "Chloé", "Yanis", "Fatou",
   "Leo", "Nadia", "Olivier", "Inès", "Hugo", "Sara", "Amine", "Emma",
   "Noah", "Lina", "Thomas", "Amina",
 ];
 
-/* Composant principal AvisListeView */
 export default function AvisListeView({ goHome }) {
-  /* Hooks du cache des cours */
-  const { courses, loadCourses, loading, error } = useCoursesCache();
+  const { courses, loadCourses, refreshCourses, loading, error } = useCoursesCache();
+  const [clientId, setClientId] = useState("");
+  const [lang, setLang] = useState("fr");
+  const [searchId, setSearchId] = useState("");
+  const [searchResults, setSearchResults] = useState(null);
+  const [apiLoading, setApiLoading] = useState(false);
+  const [apiError, setApiError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [selectedCourseAvis, setSelectedCourseAvis] = useState([]);
+  const [loadingAvis, setLoadingAvis] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  /* États de l'interface */
-  const [clientId, setClientId] = useState("");                    // ID unique client
-  const [lang, setLang] = useState("fr");                          // Langue (fr/en)
-  const [searchId, setSearchId] = useState("");                    // Terme de recherche
-  const [searchResults, setSearchResults] = useState(null);        // Résultats recherche
-  const [apiLoading, setApiLoading] = useState(false);             // Loading API recherche
-  const [apiError, setApiError] = useState(null);                  // Erreur API recherche
-  const [currentPage, setCurrentPage] = useState(1);               // Page courante
-  const [selectedCourseId, setSelectedCourseId] = useState(null);  // Cours sélectionné
-  const [selectedCourseAvis, setSelectedCourseAvis] = useState([]); // Avis du cours sélectionné
-  const [loadingAvis, setLoadingAvis] = useState(false);           // Loading avis
-  const [showModal, setShowModal] = useState(false);               // Affichage modal
+  /* États formulaire avis */
+  const [showAddAvisForm, setShowAddAvisForm] = useState(false);
+  const [newAvis, setNewAvis] = useState({
+    auteur: "",
+    texte: "",
+    session: "",
+    difficulte: "",
+    volumeTravail: "",
+    note: ""
+  });
+  const [submittingAvis, setSubmittingAvis] = useState(false);
+  const [avisSubmitError, setAvisSubmitError] = useState(null);
 
-  /* Objets de traduction i18n */
+  /* Toast de succès auto-disparition */
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+
   const t = {
     fr: {
       back: "Retour",
@@ -62,8 +70,22 @@ export default function AvisListeView({ goHome }) {
       noneReviews: "Aucun avis pour ce cours.",
       sessionLabel: "Session",
       difficultyLabel: "Difficulté",
+      workloadLabel: "Volume",
+      ratingLabel: "Note",
       more: (n) => `+${n} avis...`,
       anon: "Anonyme",
+      addReview: "Ajouter un commentaire",
+      cancel: "Annuler",
+      submit: "Publier",
+      submitting: "Publication...",
+      authorLabel: "Votre pseudo (optionnel)",
+      textLabel: "Votre avis",
+      sessionLabelForm: "Session (ex: A24)",
+      difficultyLabelForm: "Difficulté (1-5)",
+      workloadLabelForm: "Volume de travail (1-5)",
+      ratingLabelForm: "Note globale (1-5)",
+      success: "Avis publié !",
+      errorRequired: "Ce champ est requis",
     },
     en: {
       back: "Back",
@@ -83,15 +105,28 @@ export default function AvisListeView({ goHome }) {
       noneReviews: "No review for this course.",
       sessionLabel: "Term",
       difficultyLabel: "Difficulty",
+      workloadLabel: "Workload",
+      ratingLabel: "Rating",
       more: (n) => `+${n} reviews...`,
       anon: "Anonymous",
+      addReview: "Add a review",
+      cancel: "Cancel",
+      submit: "Publish",
+      submitting: "Publishing...",
+      authorLabel: "Your nickname (optional)",
+      textLabel: "Your review",
+      sessionLabelForm: "Term (ex: A24)",
+      difficultyLabelForm: "Difficulty (1-5)",
+      workloadLabelForm: "Workload (1-5)",
+      ratingLabelForm: "Overall rating (1-5)",
+      success: "Review published!",
+      errorRequired: "This field is required",
     },
   }[lang] || {};
 
-  /* Référence pour stocker les pseudos par cours */
   const nicknamesByCourseRef = useRef({});
 
-  /* Génération ID client unique */
+  /* Effets d'initialisation */
   useEffect(() => {
     let id = window.localStorage.getItem(CLIENT_ID_KEY);
     if (!id) {
@@ -101,7 +136,6 @@ export default function AvisListeView({ goHome }) {
     setClientId(id);
   }, []);
 
-  /* Chargement de la langue depuis localStorage */
   useEffect(() => {
     const stored = window.localStorage.getItem(LANG_KEY);
     if (stored === "fr" || stored === "en") {
@@ -109,7 +143,6 @@ export default function AvisListeView({ goHome }) {
     }
   }, []);
 
-  /* Chargement de la map des pseudos depuis localStorage */
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(PSEUDO_MAP_KEY);
@@ -131,7 +164,16 @@ export default function AvisListeView({ goHome }) {
     }
   }, []);
 
-  /* Sauvegarde des pseudos en localStorage */
+  /* Auto-disparition toast après 3s */
+  useEffect(() => {
+    if (showSuccessToast) {
+      const timer = setTimeout(() => {
+        setShowSuccessToast(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessToast]);
+
   const persistNicknames = () => {
     const plain = {};
     Object.entries(nicknamesByCourseRef.current).forEach(([courseId, map]) => {
@@ -140,22 +182,17 @@ export default function AvisListeView({ goHome }) {
     window.localStorage.setItem(PSEUDO_MAP_KEY, JSON.stringify(plain));
   };
 
-  /* Attribution d'un pseudo unique par auteur et cours */
   const getNicknameForAuthor = (courseId, rawAuthor) => {
     const authorKey = rawAuthor || "anonyme";
-
     if (!nicknamesByCourseRef.current[courseId]) {
       nicknamesByCourseRef.current[courseId] = new Map();
     }
     const map = nicknamesByCourseRef.current[courseId];
-
     if (map.has(authorKey)) {
       return map.get(authorKey);
     }
-
     const used = new Set(map.values());
     const available = NICKNAMES.filter((n) => !used.has(n));
-
     let chosen;
     if (available.length > 0) {
       const idx = Math.floor(Math.random() * available.length);
@@ -163,20 +200,77 @@ export default function AvisListeView({ goHome }) {
     } else {
       chosen = `Utilisateur ${map.size + 1}`;
     }
-
     map.set(authorKey, chosen);
     persistNicknames();
     return chosen;
   };
 
-  /* Chargement initial des cours */
+  /* Soumission avis + toast + refresh auto + refresh liste cours */
+  const handleSubmitAvis = async (e) => {
+    e.preventDefault();
+    if (!newAvis.texte.trim()) {
+      setAvisSubmitError(t.errorRequired);
+      return;
+    }
+
+    setSubmittingAvis(true);
+    setAvisSubmitError(null);
+
+    try {
+      const avisData = {
+        coursId: selectedCourseId,
+        auteur: newAvis.auteur.trim() || null,
+        texte: newAvis.texte.trim(),
+        session: newAvis.session.trim() || null,
+        difficulte: newAvis.difficulte ? parseInt(newAvis.difficulte) : null,
+        volumeTravail: newAvis.volumeTravail ? parseInt(newAvis.volumeTravail) : null,
+        note: newAvis.note ? parseInt(newAvis.note) : null,
+      };
+
+      await postAvis(avisData);
+      
+      // SUCCESS TOAST + RESET + REFRESH AUTO
+      setShowSuccessToast(true);
+      setNewAvis({ auteur: "", texte: "", session: "", difficulte: "", volumeTravail: "", note: "" });
+      setShowAddAvisForm(false);
+      
+      // Refresh automatique des avis du modal
+      setLoadingAvis(true);
+      const freshAvis = await fetchAvisByCourseId(selectedCourseId);
+      setSelectedCourseAvis(Array.isArray(freshAvis) ? freshAvis : []);
+      setLoadingAvis(false);
+      
+      // Refresh de la liste des cours pour mettre à jour nbAvis
+      // Force un rechargement depuis l'API en invalidant le cache
+      await refreshCourses(); // ← Utilise refreshCourses au lieu de loadCourses
+      
+      // Si on est en mode recherche, rafraîchir aussi les résultats
+      if (searchResults) {
+        const trimmedId = searchId.trim().toUpperCase();
+        if (trimmedId) {
+          if (isCompleteSigle(trimmedId)) {
+            const updatedCourse = await fetchCourseById(trimmedId);
+            setSearchResults([updatedCourse]);
+          } else {
+            const updatedResults = await fetchCoursesByPrefix(trimmedId);
+            setSearchResults(updatedResults);
+          }
+        }
+      }
+      
+    } catch (error) {
+      setAvisSubmitError(error.message || "Erreur lors de la publication");
+    } finally {
+      setSubmittingAvis(false);
+    }
+  };
+
   useEffect(() => {
     loadCourses().catch((err) =>
       console.error("Erreur lors du chargement des cours :", err)
     );
   }, [loadCourses]);
 
-  /* Réinitialisation recherche vide */
   useEffect(() => {
     if (!searchId.trim()) {
       setSearchResults(null);
@@ -185,13 +279,11 @@ export default function AvisListeView({ goHome }) {
     }
   }, [searchId]);
 
-  /* Chargement des avis du cours sélectionné */
   useEffect(() => {
     if (!selectedCourseId) {
       setSelectedCourseAvis([]);
       return;
     }
-
     setLoadingAvis(true);
     fetchAvisByCourseId(selectedCourseId)
       .then((avis) => setSelectedCourseAvis(Array.isArray(avis) ? avis : []))
@@ -202,16 +294,13 @@ export default function AvisListeView({ goHome }) {
       .finally(() => setLoadingAvis(false));
   }, [selectedCourseId]);
 
-  /* Vérifie si le sigle est complet pour recherche exacte */
   const isCompleteSigle = (sigle) => sigle.length >= MIN_SIGLE_LENGTH;
-
-  /* Recherche cours par ID exact */
+  
   const rechercherCoursParId = async (sigle) => {
     const data = await fetchCourseById(sigle);
     setSearchResults([data]);
   };
-
-  /* Recherche cours par préfixe */
+  
   const rechercherCoursParPrefix = async (prefix) => {
     const data = await fetchCoursesByPrefix(prefix);
     if (data.length === 0) {
@@ -220,17 +309,14 @@ export default function AvisListeView({ goHome }) {
       setSearchResults(data);
     }
   };
-
-  /* Gestionnaire de recherche */
+  
   const handleSearch = async () => {
     const trimmedId = searchId.trim().toUpperCase();
     if (!trimmedId) return;
-
     setApiLoading(true);
     setApiError(null);
     setSearchResults(null);
     setCurrentPage(1);
-
     try {
       if (isCompleteSigle(trimmedId)) {
         await rechercherCoursParId(trimmedId);
@@ -243,57 +329,51 @@ export default function AvisListeView({ goHome }) {
       setApiLoading(false);
     }
   };
-
-  /* Sélection d'un cours */
+  
   const selectCourse = (courseId) => {
     setSelectedCourseId(courseId);
     setShowModal(true);
   };
-
-  /* Fermeture modal */
+  
   const closeModal = () => {
     setShowModal(false);
     setSelectedCourseId(null);
+    setShowAddAvisForm(false);
+    setNewAvis({ auteur: "", texte: "", session: "", difficulte: "", volumeTravail: "", note: "" });
+    setAvisSubmitError(null);
+    setShowSuccessToast(false);
   };
-
-  /* Recherche sur Entrée */
+  
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
-
-  /* Changement de page */
+  
   const goToPage = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  /* Cours actuellement affichés */
   let currentCourses = [];
   if (searchResults) {
     currentCourses = searchResults;
   } else if (courses) {
     currentCourses = courses;
   }
-
-  /* Pagination */
+  
   const displayedCourses = currentCourses.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
+  
   const totalPages = Math.max(1, Math.ceil(currentCourses.length / ITEMS_PER_PAGE));
-
-  /* États globaux */
   const isLoading = loading || apiLoading;
   const hasError = error || apiError;
   const hasNoCourses = !isLoading && !hasError && displayedCourses.length === 0;
-
   const allAvailableCourses = searchResults || courses || [];
   const selectedCourse = allAvailableCourses.find((c) => c.id === selectedCourseId);
-
-  /* Sessions disponibles par cours */
+  
   const sessionsByCourse = useMemo(() => {
     const map = {};
     (currentCourses || []).forEach((course) => {
@@ -307,10 +387,8 @@ export default function AvisListeView({ goHome }) {
     return map;
   }, [currentCourses, lang]);
 
-  /* Rendu JSX */
   return (
     <div className="cours-container">
-      {/* Barre de navigation supérieure */}
       <div className="top-row">
         <button onClick={goHome}>{t.back}</button>
         <div className="search-bar">
@@ -330,12 +408,10 @@ export default function AvisListeView({ goHome }) {
 
       <h2>{t.title}</h2>
 
-      {/* États de chargement/erreur */}
       {isLoading && <p>{t.loading}</p>}
       {hasError && <p className="error">{t.errorPrefix}{hasError}</p>}
       {hasNoCourses && <p>{t.noneCourses}</p>}
 
-      {/* Tableau des cours */}
       {!isLoading && !hasError && displayedCourses.length > 0 && (
         <>
           <table className="courses-table">
@@ -366,7 +442,6 @@ export default function AvisListeView({ goHome }) {
             </tbody>
           </table>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="pagination">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -383,7 +458,13 @@ export default function AvisListeView({ goHome }) {
         </>
       )}
 
-      {/* Modal des avis */}
+      {/* Toast succès auto-disparition */}
+      {showSuccessToast && (
+        <div className="success-toast">
+          {t.success}
+        </div>
+      )}
+
       {showModal && selectedCourse && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -393,44 +474,161 @@ export default function AvisListeView({ goHome }) {
             </div>
 
             <div className="modal-body">
-              {loadingAvis ? (
-                <p>{t.loadingReviews}</p>
-              ) : selectedCourseAvis.length === 0 ? (
-                <p>{t.noneReviews}</p>
-              ) : (
-                <div className="avis-list">
-                  {/* Affichage des 10 premiers avis */}
-                  {selectedCourseAvis.slice(0, 10).map((avis, index) => {
-                    /* Nettoyage du texte des avis */
-                    let cleanedText = (avis.texte || "").trim();
-                    const lines = cleanedText.split("\n").map(l => l.trim()).filter(l => l !== "");
-                    if (lines.length > 0 && lines[lines.length - 1] === "0") {
-                      lines.pop();
-                    }
-                    cleanedText = lines.join("\n");
+              {/* Bouton ajouter commentaire */}
+              {!showAddAvisForm && (
+                <button 
+                  className="add-avis-btn"
+                  onClick={() => setShowAddAvisForm(true)}
+                >
+                  {t.addReview}
+                </button>
+              )}
 
-                    const rawAuthor = avis.auteur || t.anon;
-                    const pseudo = getNicknameForAuthor(selectedCourse.id, rawAuthor);
+              {/* Formulaire ajout avis */}
+              {showAddAvisForm && (
+                <form onSubmit={handleSubmitAvis} className="add-avis-form">
+                  <div className="form-group">
+                    <label>{t.authorLabel}</label>
+                    <input
+                      type="text"
+                      value={newAvis.auteur}
+                      onChange={(e) => setNewAvis({...newAvis, auteur: e.target.value})}
+                      placeholder="Anonyme"
+                      maxLength={50}
+                    />
+                  </div>
 
-                    return (
-                      <div key={avis.id || index} className="avis-item">
-                        <strong>{pseudo}:</strong>
-                        <p style={{ whiteSpace: "pre-line" }}>{cleanedText}</p>
-                        {avis.session && (
-                          <span className="avis-meta">{t.sessionLabel}: {avis.session}</span>
-                        )}
-                        {avis.difficulte != null && avis.difficulte > 0 && (
-                          <span className="avis-meta">
-                            {t.difficultyLabel}: {avis.difficulte}/5
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                  {selectedCourseAvis.length > 10 && (
-                    <p className="more-avis">{t.more(selectedCourseAvis.length - 10)}</p>
+                  <div className="form-group">
+                    <label>{t.textLabel} *</label>
+                    <textarea
+                      value={newAvis.texte}
+                      onChange={(e) => setNewAvis({...newAvis, texte: e.target.value})}
+                      placeholder="Votre avis sur ce cours..."
+                      rows={4}
+                      maxLength={1000}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>{t.sessionLabelForm}</label>
+                      <input
+                        type="text"
+                        value={newAvis.session}
+                        onChange={(e) => setNewAvis({...newAvis, session: e.target.value})}
+                        placeholder="A24, H25..."
+                        maxLength={10}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>{t.difficultyLabelForm}</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="5"
+                        value={newAvis.difficulte}
+                        onChange={(e) => setNewAvis({...newAvis, difficulte: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>{t.workloadLabelForm}</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="5"
+                        value={newAvis.volumeTravail}
+                        onChange={(e) => setNewAvis({...newAvis, volumeTravail: e.target.value})}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>{t.ratingLabelForm}</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="5"
+                        value={newAvis.note}
+                        onChange={(e) => setNewAvis({...newAvis, note: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
+                  {avisSubmitError && <p className="error">{avisSubmitError}</p>}
+
+                  <div className="form-actions">
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        setShowAddAvisForm(false);
+                        setAvisSubmitError(null);
+                      }}
+                      disabled={submittingAvis}
+                    >
+                      {t.cancel}
+                    </button>
+                    <button type="submit" disabled={submittingAvis}>
+                      {submittingAvis ? t.submitting : t.submit}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* Liste des avis existants */}
+              {!showAddAvisForm && (
+                <>
+                  {loadingAvis ? (
+                    <p>{t.loadingReviews}</p>
+                  ) : selectedCourseAvis.length === 0 ? (
+                    <p>{t.noneReviews}</p>
+                  ) : (
+                    <div className="avis-list">
+                      {selectedCourseAvis.slice(0, 10).map((avis, index) => {
+                        let cleanedText = (avis.texte || "").trim();
+                        const lines = cleanedText.split("\n").map(l => l.trim()).filter(l => l !== "");
+                        if (lines.length > 0 && lines[lines.length - 1] === "0") {
+                          lines.pop();
+                        }
+                        cleanedText = lines.join("\n");
+
+                        const rawAuthor = avis.auteur || t.anon;
+                        const pseudo = getNicknameForAuthor(selectedCourse.id, rawAuthor);
+
+                        return (
+                          <div key={avis.id || index} className="avis-item">
+                            <strong>{pseudo}:</strong>
+                            <p style={{ whiteSpace: "pre-line" }}>{cleanedText}</p>
+                            <div className="avis-metas">
+                              {avis.session && (
+                                <span className="avis-meta">{t.sessionLabel}: {avis.session}</span>
+                              )}
+                              {avis.difficulte != null && avis.difficulte > 0 && (
+                                <span className="avis-meta">
+                                  {t.difficultyLabel}: {avis.difficulte}/5
+                                </span>
+                              )}
+                              {avis.volumeTravail != null && avis.volumeTravail > 0 && (  
+                                <span className="avis-meta">
+                                  {t.workloadLabel}: {avis.volumeTravail}/5
+                                </span>
+                              )}
+                              {avis.note != null && avis.note > 0 && (  
+                                <span className="avis-meta">
+                                  {t.ratingLabel}: {avis.note}/5
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {selectedCourseAvis.length > 10 && (
+                        <p className="more-avis">{t.more(selectedCourseAvis.length - 10)}</p>
+                      )}
+                    </div>
                   )}
-                </div>
+                </>
               )}
             </div>
           </div>

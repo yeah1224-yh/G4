@@ -269,7 +269,7 @@
   line-height: 1.6;
   margin: 0 0 20px 0;
   overflow-y: auto;
-  max-height: 150px;
+  max-height: 120px;
   flex-shrink: 0;
 }
 

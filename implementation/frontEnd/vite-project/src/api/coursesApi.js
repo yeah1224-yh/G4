@@ -1,5 +1,5 @@
 // src/api/coursesApi.js
-/* URL de base de l'API (VITE_API_URL ou localhost par défaut) */
+/* URL de base de l'API (VITE_API_URL ou localhost:7070 par défaut) */
 const api = import.meta.env.VITE_API_URL || "http://localhost:7070";
 
 /* Fonction utilitaire : construction de query string */
@@ -193,6 +193,31 @@ export async function fetchAvisByCourseId(courseId, filters = {}) {
   }
   
   return res.json();
+}
+
+/* ✅ CORRIGÉ : POST /avis (tes routes Routes.java) */
+export async function postAvis(avisData) {
+  const url = `${api}/avis`;  // ← /avis (Routes.java: app.post("/avis"))
+  
+  console.log("Posting avis:", avisData);
+  
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(avisData),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    console.error("Avis error:", errorData);
+    throw new Error(errorData.message || `Erreur HTTP ${response.status}`);
+  }
+  
+  const result = await response.json();
+  console.log("Avis publié:", result);
+  return result;
 }
 
 /* Récupère les statistiques académiques d'un cours */

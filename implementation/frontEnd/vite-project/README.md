@@ -36,7 +36,7 @@ frontEnd/vite-project/
 
 ```
 
-# Message de confirmation## Architecture
+## Architecture
 
 - API (src/api/) : Regroupe les fonctions qui communiquent avec le backend (ex. coursesApi.js pour récupérer les cours depuis l’API REST).
 
