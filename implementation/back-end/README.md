@@ -79,7 +79,6 @@ ift2255-template-javalin/
 Ouvrez la commande de ligne ( Moi je suis sur linux, en fonction de votre système suivez les instructions de votre système)
 Il faut être dans le dossier rest-api.
 
-- mvn clean install
 - mvn exec:java -Dexec.mainClass=com.diro.ift2255.Main
 - ou bien le lancer directement dans visual studio code
 

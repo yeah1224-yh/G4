@@ -3,7 +3,9 @@ Lien Github
 https://github.com/yeah1224-yh/G4.git
 
 Vous trouverez la structure et les dépendences à installer dans chaque dossier de l'implementation contenant leur propre README.md
-Dans le dossier conception, les diagrammes on été mise à jour 
+Dans le dossier conception, les diagrammes on été mise à jour.
+
+Les environnement sont déjà créer, donc il faut juste les activer 
 
 ## Briève description du projet
 
