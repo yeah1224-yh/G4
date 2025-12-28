@@ -107,11 +107,13 @@ Import stats_cours terminé.
 [com.diro.ift2255.Main.main()] INFO org.eclipse.jetty.server.AbstractConnector - Started ServerConnector@77a96387{HTTP/1.1, (http/1.1)}{0.0.0.0:7070}  
 [com.diro.ift2255.Main.main()] INFO org.eclipse.jetty.server.Server - Started Server@13665341{STARTING}[11.0.25,sto=0] @6195ms  
 [com.diro.ift2255.Main.main()] INFO io.javalin.Javalin -   
+```sh
        __                  ___           _____  
       / /___ __   ______ _/ (_)___      / ___/  
  __  / / __ `/ | / / __ `/ / / __ \    / __ \  
 / /_/ / /_/ /| |/ / /_/ / / / / / /   / /_/ /  
 \____/\__,_/ |___/\__,_/_/_/_/ /_/    \____/  
+```
   
        https://javalin.io/documentation  
   

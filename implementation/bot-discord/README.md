@@ -1,12 +1,12 @@
 # Structure du bot discord
-
+```sh
 bot-discord/
 ├── exports/
 │   └── opinions_stream.ndjson
 ├── .env
 ├── bot.py
 └── requirements.txt
-
+```
 
 ## Architecture
 
