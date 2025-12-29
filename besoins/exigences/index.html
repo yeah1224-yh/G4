@@ -587,15 +587,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#-chiffrement-des-donnees-sensibles" class="md-nav__link">
-    <span class="md-ellipsis">
-      - Chiffrement des données sensibles
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#types-dutilisateurs" class="md-nav__link">
     <span class="md-ellipsis">
       Types d'utilisateurs
@@ -962,15 +953,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#-chiffrement-des-donnees-sensibles" class="md-nav__link">
-    <span class="md-ellipsis">
-      - Chiffrement des données sensibles
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#types-dutilisateurs" class="md-nav__link">
     <span class="md-ellipsis">
       Types d'utilisateurs
@@ -1014,21 +996,21 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Consulter les détails d'un cours  </li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Comparer plusieurs cours  </li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Personnaliser son profil étudiant  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Consulter les avis agrégrés  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Mettre une commentaire  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Envoyer report pour le non fonctionnement correct du système</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Consulter les avis agrégés  </li>
 </ul>
 <h2 id="exigences-non-fonctionnelles">Exigences non fonctionnelles<a class="headerlink" href="#exigences-non-fonctionnelles" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Planifium : L'API doit toujours répondre aux requêtes  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Disponibilité : Le système doit être disponible à 99.999%  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Temps de réponse : délais de réponse inferieur ou égale à 2 secondes pour toutes les requêtes  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Maintenabilité : Code facile à maintenir et à faire évoluer  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Evolutif : Le système doit être capable de gérer l'augmentation du nombre d'utilisateurs  </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Le platforme doit être compatible avec Chrome, brave, firefox, internet explorateur et ceux des android et iOS  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Performance : L'API doit répondre en moins de 500ms pour les requêtes de recherche et consultation de cours  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Disponibilité : Le système doit être disponible à 99.9% pendant les périodes d'inscription académique  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Temps de réponse : délai de réponse inférieur ou égal à 2 secondes pour les requêtes de comparaison de cours et génération de statistiques  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Maintenabilité : Code documenté avec tests unitaires couvrant 80% des fonctionnalités critiques  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Évolutivité : Le système doit supporter une croissance jusqu'à 50 000 utilisateurs actifs mensuels  </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Compatibilité : La plateforme doit être compatible avec Chrome, Brave, Firefox, Safari et les navigateurs mobiles Android/iOS  </li>
 </ul>
 <h2 id="priorisation">Priorisation<a class="headerlink" href="#priorisation" title="Permanent link">&para;</a></h2>
-<h2 id="-chiffrement-des-donnees-sensibles">- Chiffrement des données sensibles<a class="headerlink" href="#-chiffrement-des-donnees-sensibles" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Chiffrement des données sensibles  </li>
+</ul>
 <h2 id="types-dutilisateurs">Types d'utilisateurs<a class="headerlink" href="#types-dutilisateurs" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Identifier les différents profils qui interagiront avec le système.</p>
@@ -1036,7 +1018,7 @@
 <table>
 <thead>
 <tr>
-<th>Type d’utilisateur</th>
+<th>Type d'utilisateur</th>
 <th>Description</th>
 <th>Exemples de fonctionnalités accessibles</th>
 </tr>
@@ -1066,16 +1048,16 @@
 </table>
 <h2 id="infrastructures">Infrastructures<a class="headerlink" href="#infrastructures" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p>Informations sur l’environnement d’exécution cible, les outils ou plateformes nécessaires.</p>
+<p>Informations sur l'environnement d'exécution cible, les outils ou plateformes nécessaires.</p>
 </blockquote>
 <ul>
 <li>Le système sera hébergé sur un serveur Ubuntu 22.04.  </li>
 <li>Base de données : PostgreSQL version 15.  </li>
 <li>Serveur Web : Nginx + Gunicorn (pour une app Python, par exemple).  </li>
-<li>Langage principal : Python, JavaScript  </li>
-<li>Framework principal : React et Flash  </li>
-<li>Outils de développement: Git, Docker, VSCode, nano  </li>
-<li>Outils de tests : Pytest, Postman, Selenium   </li>
+<li>Langage principal : java ( javalin) , java script  </li>
+<li>Framework principal : React js  </li>
+<li>Outils de développement: Git, Docker, VSCode  </li>
+<li>Outils de tests : Pytest, Postman, Selenium</li>
 </ul>
 
 
