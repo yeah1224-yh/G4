@@ -1,0 +1,348 @@
+/* Conteneur principal de la liste des cours */
+.cours-container {
+  width: 100%;
+  height: 100%;
+  background-color: #f8fafc;
+  padding: 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Toolbar globale */
+.toolbar {
+  margin-bottom: 30px;
+}
+
+/* Ligne du haut : bouton à gauche, search à droite */
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Bouton Retour */
+.top-row > button {
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.top-row > button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Barre de recherche collée à droite */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  max-width: 400px;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-bar input::placeholder {
+  color: #94a3b8;
+}
+
+.search-bar button {
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.search-bar button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.search-bar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Messages d'information */
+.cours-container > p {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 16px;
+  color: #64748b;
+}
+
+/* Messages d'erreur */
+.error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  color: #c33;
+}
+
+.error p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Grille des cartes de cours - 4 colonnes par défaut */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1800px;
+  margin: 40px auto 30px;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* 3 colonnes pour écrans moyens */
+@media (max-width: 1400px) {
+  .courses-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 2 colonnes pour tablettes */
+@media (max-width: 1024px) {
+  .courses-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 1 colonne pour mobiles */
+@media (max-width: 768px) {
+  .courses-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 0;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-1px);
+}
+
+.pagination button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+}
+
+/* Styles responsive pour tablettes */
+@media (max-width: 768px) {
+  .top-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-bar {
+    max-width: 100%;
+    flex-direction: column;
+  }
+  
+  .search-bar button {
+    width: 100%;
+  }
+  
+  .courses-grid {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+}
+
+/* Styles responsive pour mobiles */
+@media (max-width: 480px) {
+  .cours-container {
+    padding: 10px;
+  }
+}
+
+/* Carte individuelle de cours */
+.course-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 450px;
+}
+
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover::before {
+  transform: scaleX(1);
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #e2e8f0;
+}
+
+/* Titre du cours */
+.course-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+/* Description du cours */
+.course-card .description {
+  font-size: 0.95rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+  overflow-y: auto;
+  max-height: 120px;
+  flex-shrink: 0;
+}
+
+/* Liste des informations du cours */
+.course-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+.course-info li {
+  font-size: 0.9rem;
+  color: #64748b;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.course-info li:hover {
+  background-color: #f1f5f9;
+}
+
+.course-info strong {
+  color: #475569;
+  font-weight: 600;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+/* Animation d'apparition des cartes */
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.course-card {
+  animation: fadeInCard 0.4s ease-out;
+}
+
+/* Styles responsive pour mobiles */
+@media (max-width: 480px) {
+  .course-card {
+    padding: 20px;
+    min-height: 350px;
+  }
+  
+  .course-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .course-info strong {
+    min-width: 100px;
+    font-size: 0.85rem;
+  }
+  
+  .course-info li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

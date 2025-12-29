@@ -1,0 +1,656 @@
+/* Conteneur principal de la liste des cours */
+.cours-container {
+  width: 100%;
+  height: 100%;
+  background-color: #f8fafc;
+  padding: 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Ligne du haut : bouton Retour à gauche, search à droite */
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Bouton Retour */
+.top-row > button {
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.top-row > button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Barre de recherche */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  max-width: 400px;
+  flex: 1;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+}
+
+.search-bar button {
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.search-bar button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.search-bar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+/* Messages d'information ou d'erreur */
+.cours-container > p {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 16px;
+  color: #64748b;
+}
+
+.error {
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Tableau des cours */
+.courses-table {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.courses-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.courses-table th {
+  padding: 16px 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Colonnes du tableau avec largeurs fixes */
+.courses-table th:nth-child(1),
+.courses-table td:nth-child(1) {
+  width: 20%;      /* Code du cours */
+  text-align: left;
+}
+
+.courses-table th:nth-child(2),
+.courses-table td:nth-child(2) {
+  width: 40%;      /* Nom du cours */
+  text-align: left;
+}
+
+.courses-table th:nth-child(3),
+.courses-table td:nth-child(3) {
+  width: 25%;      /* Session */
+  text-align: center;
+}
+
+.courses-table th:nth-child(4),
+.courses-table td:nth-child(4) {
+  width: 15%;      /* Nombre d'avis */
+  text-align: center;
+}
+
+.courses-table tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.courses-table tbody tr:hover {
+  background-color: #f8fafc;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.courses-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.courses-table td {
+  padding: 16px 16px;
+  font-size: 14px;
+  color: #475569;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 30px 0;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-1px);
+}
+
+.pagination button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+/* Overlay de la modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Contenu de la modal */
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* En-tête de la modal */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.modal-header button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.modal-header button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Corps de la modal */
+.modal-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  max-height: calc(80vh - 80px);
+}
+
+.modal-body > p {
+  text-align: center;
+  color: #64748b;
+  padding: 20px 0;
+}
+
+/* Bouton + Formulaire ajout avis */
+.add-avis-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 24px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(10, 95, 151, 0.3);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-avis-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(28, 56, 146, 0.4);
+}
+
+.add-avis-btn:active {
+  transform: translateY(0);
+}
+
+.add-avis-form {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 24px;
+  border-radius: 16px;
+  border: 2px solid #e9ecef;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  background: white;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.form-actions button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 140px;
+}
+
+.form-actions button[type="submit"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(40, 106, 167, 0.3);
+}
+
+.form-actions button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(40, 63, 167, 0.4);
+}
+
+.form-actions button[type="button"] {
+  background: #6c757d;
+  color: white;
+}
+
+.form-actions button[type="button"]:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.form-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Liste des avis */
+.avis-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.avis-item {
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  transition: all 0.2s ease;
+}
+
+.avis-item:hover {
+  background: #f1f5f9;
+  transform: translateX(4px);
+}
+
+.avis-item strong {
+  color: #1f2937;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.avis-item p {
+  color: #475569;
+  line-height: 1.6;
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+
+/* CLASSES MANQUANTES : Métadonnées des avis */
+.avis-metas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.avis-meta {
+  display: inline-block;
+  font-size: 12px;
+  color: #64748b;
+  background: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+}
+
+.more-avis {
+  text-align: center;
+  color: #667eea;
+  font-weight: 600;
+  padding: 12px 0;
+  margin: 0;
+}
+
+/* TOAST SUCCÈS - CENTRÉ AU MILIEU DE L'ÉCRAN */
+.success-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 20px 32px;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(16, 185, 129, 0.5);
+  font-size: 16px;
+  font-weight: 600;
+  z-index: 2000;
+  animation: popInCenter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  border-left: 6px solid #047857;
+  backdrop-filter: blur(12px);
+  max-width: 400px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.success-toast::before {
+  font-size: 24px;
+  margin-right: 12px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes popInCenter {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes popOutCenter {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+}
+
+/* Styles responsive pour tablettes */
+@media (max-width: 768px) {
+  .top-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .search-bar {
+    max-width: 100%;
+    flex-direction: column;
+  }
+
+  .search-bar button {
+    width: 100%;
+  }
+
+  .courses-table {
+    font-size: 13px;
+  }
+
+  .courses-table th,
+  .courses-table td {
+    padding: 12px 10px;
+  }
+
+  .modal-content {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .modal-header,
+  .modal-body {
+    padding: 16px 20px;
+  }
+
+  /* Formulaire responsive */
+  .form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .add-avis-btn {
+    padding: 16px 20px;
+    font-size: 15px;
+  }
+
+  /* Toast responsive - reste centré */
+  .success-toast {
+    max-width: 90vw;
+    padding: 18px 24px;
+    font-size: 15px;
+  }
+}
+
+/* Styles responsive pour mobiles */
+@media (max-width: 480px) {
+  .cours-container {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  .courses-table {
+    font-size: 12px;
+  }
+
+  .courses-table th,
+  .courses-table td {
+    padding: 10px 8px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    max-width: none;
+  }
+
+  .success-toast {
+    font-size: 14px;
+    padding: 16px 20px;
+    max-width: 85vw;
+  }
+}

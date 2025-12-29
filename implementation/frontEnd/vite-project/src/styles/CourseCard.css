@@ -1,0 +1,132 @@
+/* Carte individuelle de cours */
+.course-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 480px; /* Prend toute la hauteur de la cellule grid */
+}
+
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover::before {
+  transform: scaleX(1);
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #e2e8f0;
+}
+
+/* Titre du cours */
+.course-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+  flex-shrink: 0; /* Ne se réduit pas */
+}
+
+/* Description du cours */
+.course-card .description {
+  font-size: 0.95rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+  overflow-y: auto; /* Active le scroll vertical */
+  max-height: 150px; /* Hauteur maximale avant scroll */
+  flex-shrink: 0; /* Empêche la réduction */
+}
+
+/* Liste des informations du cours */
+.course-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0; /* Ne se réduit pas */
+  margin-top: auto; /* Reste toujours en bas */
+}
+
+.course-info li {
+  font-size: 0.9rem;
+  color: #64748b;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.course-info li:hover {
+  background-color: #f1f5f9;
+}
+
+.course-info strong {
+  color: #475569;
+  font-weight: 600;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+/* Animation d'apparition des cartes */
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.course-card {
+  animation: fadeInCard 0.4s ease-out;
+}
+
+/* Styles responsive pour mobiles */
+@media (max-width: 480px) {
+  .course-card {
+    padding: 20px;
+    min-height: 350px; /* Hauteur minimale ajustée pour mobile */
+  }
+
+  .course-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .course-info strong {
+    min-width: 100px;
+    font-size: 0.85rem;
+  }
+
+  .course-info li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
